@@ -9,11 +9,9 @@ import java.awt.geom.Ellipse2D;
  */
 public class MapPanel extends JPanel {
 
-    JLabel label;
-    Shape sprinkler;
-
     public MapPanel() {
-
+        super();
+        draw();
     }
 
     public void paintComponent(Graphics g) {
@@ -22,15 +20,14 @@ public class MapPanel extends JPanel {
         g2d.setStroke(new BasicStroke(5.0f));
 
 
+
         double startX = 100;
-        double startY = 30;
+        double startY = 100;
         double width = 45;
         double height = 45;
-
         double gap = 60;
 
         Color color = Color.GREEN;
-
         g2d.setPaint(color);
 
         double curX1 = startX;
@@ -58,10 +55,17 @@ public class MapPanel extends JPanel {
         }
 
 
+        double stringStartY = 50;
+        String string = "Sprinkler Location";
+        g2d.setPaint(Color.BLACK);
+        g2d.setFont(new Font("Arial", Font.BOLD, 20));
+        g2d.drawString(string, (int)startX, (int)stringStartY);
+
+
     }
 
     public void draw() {
-//        this.add(label);
+
         repaint();
     }
 
