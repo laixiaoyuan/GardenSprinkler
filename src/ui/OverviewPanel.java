@@ -18,10 +18,10 @@ class OverviewPanel extends JPanel{
     JButton statusSwitch;
 
     JLabel temperature;
-    JTextArea curTemp;
-    JLabel tempUnit;
-    JButton higherTemp;
-    JButton lowerTemp;
+    JTextField curTemp;
+    JComboBox tempUnit;
+//    JButton higherTemp;
+//    JButton lowerTemp;
 
 
     public OverviewPanel() {
@@ -60,26 +60,33 @@ class OverviewPanel extends JPanel{
         return panel;
     }
 
-    public JPanel createTemp() {
+    private JPanel createTemp() {
         temperature = new JLabel("Current Temperature: ");
         temperature.setFont(new Font("Georgia", Font.PLAIN, 16));
-        curTemp = new JTextArea("20");
+        curTemp = new JTextField("70", 3);
         curTemp.setFont(new Font("Georgia", Font.PLAIN, 16));
-        tempUnit = new JLabel("℃");
-        tempUnit.setFont(new Font("Georgia", Font.PLAIN, 16));
-        higherTemp = new JButton("+");
-        lowerTemp = new JButton("-");
+        tempUnit = createTempUnit();
+//        higherTemp = new JButton("+");
+//        lowerTemp = new JButton("-");
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel.add(temperature);
         panel.add(curTemp);
         panel.add(tempUnit);
-        panel.add(higherTemp);
-        panel.add(lowerTemp);
+//        panel.add(higherTemp);
+//        panel.add(lowerTemp);
         panel.setBorder(new TitledBorder(new EtchedBorder(), "Temperature"));
 
         return panel;
+    }
+    private JComboBox createTempUnit() {
+        String[] tempUnit = {"℉", "℃"};
+        JComboBox comboBox = new JComboBox(tempUnit);
+        comboBox.setForeground(Color.BLUE);
+        comboBox.setFont(new Font("Georgia", Font.BOLD, 14));
+        comboBox.setEditable(false);
+        return comboBox;
     }
 
 }

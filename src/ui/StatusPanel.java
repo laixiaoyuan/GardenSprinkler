@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * Created by Lexie on 11/17/16.
  */
-public class StatusPanel extends JPanel {
+class StatusPanel extends JPanel {
 
     private JTree tree;
     private JPanel panel;

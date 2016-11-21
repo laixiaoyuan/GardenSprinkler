@@ -3,7 +3,7 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 
-public class TabbedPanel {
+class TabbedPanel {
     public TabbedPanel() {
         JFrame frame = new JFrame("HummingBee Home Garden Sprinkler System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -7,7 +7,7 @@ import java.awt.geom.Ellipse2D;
 /**
  * Created by Lexie on 11/19/16.
  */
-public class MapPanel extends JPanel {
+class MapPanel extends JPanel {
 
     public MapPanel() {
         super();
