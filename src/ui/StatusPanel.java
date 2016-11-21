@@ -11,9 +11,25 @@ import java.awt.*;
 public class StatusPanel extends JPanel {
 
     private JTree tree;
+    private JPanel panel;
+    private JTextArea sprinklerName;
+    private JTextArea status;
+    private JTextArea function;
+
+
 
     public StatusPanel() {
         super();
+        JScrollPane leftPanel = showSprinklerPanel();
+        JPanel rightPanel = showStatusPanel();
+        panel = new JPanel(new BorderLayout());
+        panel.add(leftPanel, BorderLayout.WEST);
+        panel.add(rightPanel, BorderLayout.EAST);
+        add(panel);
+
+    }
+
+    private JScrollPane showSprinklerPanel() {
         tree = createTree();
         Icon imageIcon = new ImageIcon("ui/sprinkler.png");
         DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
@@ -22,7 +38,7 @@ public class StatusPanel extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setPreferredSize(new Dimension(200, 200));
-        add(scrollPane);
+        return scrollPane;
     }
 
     private JTree createTree() {
@@ -58,5 +74,43 @@ public class StatusPanel extends JPanel {
         root.add(westGroup);
         JTree jTree = new JTree(root);
         return jTree;
+    }
+
+    private JPanel showStatusPanel() {
+        Font font = new Font("Georgia", Font.BOLD, 14);
+
+        JLabel head = new JLabel("Sprinkler: ");
+        head.setFont(font);
+
+        sprinklerName = new JTextArea("1N");
+        sprinklerName.setFont(font);
+        sprinklerName.setForeground(Color.BLUE);
+
+        JLabel statusHead = new JLabel("Status: ");
+        statusHead.setFont(font);
+
+        status = new JTextArea("ON");
+        status.setFont(font);
+        status.setForeground(Color.BLUE);
+
+        JLabel funcHead = new JLabel("Functional: ");
+        funcHead.setFont(font);
+
+        function = new JTextArea("Functional");
+        function.setFont(font);
+        function.setForeground(Color.BLUE);
+
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(head);
+        panel.add(sprinklerName);
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(statusHead);
+        panel.add(status);
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(funcHead);
+        panel.add(function);
+
+        return panel;
     }
 }
