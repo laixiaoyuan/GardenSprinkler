@@ -1,6 +1,9 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
@@ -12,9 +15,9 @@ class StatusPanel extends JPanel {
 
     private JTree tree;
     private JPanel panel;
-    private JTextArea sprinklerName;
-    private JTextArea status;
-    private JTextArea function;
+    private JLabel sprinklerName;
+    private JLabel status;
+    private JLabel function;
 
 
 
@@ -42,6 +45,8 @@ class StatusPanel extends JPanel {
     }
 
     private JTree createTree() {
+        Font font = new Font("Georgia", Font.BOLD, 18);
+
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("All");
 
         DefaultMutableTreeNode southGroup = new DefaultMutableTreeNode("South");
@@ -73,44 +78,63 @@ class StatusPanel extends JPanel {
         root.add(eastGroup);
         root.add(westGroup);
         JTree jTree = new JTree(root);
+        jTree.setShowsRootHandles(true);
+        jTree.setFont(font);
         return jTree;
     }
 
     private JPanel showStatusPanel() {
-        Font font = new Font("Georgia", Font.BOLD, 14);
+        Font font = new Font("Georgia", Font.BOLD, 20);
 
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel head = new JLabel("Sprinkler: ");
         head.setFont(font);
-
-        sprinklerName = new JTextArea("1N");
+        sprinklerName = new JLabel("1N");
         sprinklerName.setFont(font);
-        sprinklerName.setForeground(Color.BLUE);
+        sprinklerName.setForeground(Color.decode("#3e5266"));
+        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel1.add(head);
+        panel1.add(sprinklerName);
 
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel statusHead = new JLabel("Status: ");
         statusHead.setFont(font);
-
-        status = new JTextArea("ON");
+        status = new JLabel("ON");
         status.setFont(font);
-        status.setForeground(Color.BLUE);
+        status.setForeground(Color.decode("#3e5266"));
+        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel2.add(statusHead);
+        panel2.add(status);
 
+        JPanel panel3 = new JPanel();
+        panel3.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel funcHead = new JLabel("Functional: ");
         funcHead.setFont(font);
-
-        function = new JTextArea("Functional");
+        function = new JLabel("Functional");
         function.setFont(font);
-        function.setForeground(Color.BLUE);
+        function.setForeground(Color.decode("#3e5266"));
+        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel3.add(funcHead);
+        panel3.add(function);
 
-        JPanel panel = new JPanel(new FlowLayout());
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel.add(head);
-        panel.add(sprinklerName);
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel.add(statusHead);
-        panel.add(status);
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel.add(funcHead);
-        panel.add(function);
+        JPanel panel4 = new JPanel();
+        panel4.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JButton enableButton = new JButton("ENABLE");
+        enableButton.setFont(font);
+        JButton disableButton = new JButton("DISABLE");
+        disableButton.setFont(font);
+        panel4.add(enableButton);
+        panel4.add(disableButton);
 
-        return panel;
+        JPanel masterPanel = new JPanel();
+        masterPanel.setLayout(new BoxLayout(masterPanel, BoxLayout.Y_AXIS));
+        masterPanel.add(panel1);
+        masterPanel.add(panel2);
+        masterPanel.add(panel3);
+        masterPanel.add(panel4);
+
+        return masterPanel;
     }
 }

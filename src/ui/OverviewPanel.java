@@ -1,8 +1,7 @@
 package ui;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
@@ -12,25 +11,25 @@ import java.awt.geom.Ellipse2D;
 class OverviewPanel extends JPanel{
 
     JPanel controlPanel;
-
     JLabel system;
-    JTextArea status;
+    JLabel status;
     JButton statusSwitch;
-
     JLabel temperature;
-    JTextField curTemp;
+    JLabel curTemp;
     JComboBox tempUnit;
-//    JButton higherTemp;
-//    JButton lowerTemp;
-
+    JButton higherTemp;
+    JButton lowerTemp;
+    Font fontBig = new Font("Georgia", Font.BOLD, 22);
+    Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
 
     public OverviewPanel() {
         super();
+
         controlPanel = new JPanel();
         controlPanel.setLayout(new GridLayout(0, 1));
         createControlPanel();
+        controlPanel.setBorder(new CompoundBorder(new LineBorder(Color.decode("#ebf5ff")), new EmptyBorder(10, 10, 10, 10)));
         add(controlPanel);
-
     }
 
     public void createControlPanel() {
@@ -39,52 +38,60 @@ class OverviewPanel extends JPanel{
 
         controlPanel.add(systemStatusPanel);
         controlPanel.add(curTempPanel);
-
     }
 
     public JPanel createSysStatus() {
         system = new JLabel("System Status: ");
-        system.setFont(new Font("Georgia", Font.PLAIN, 16));
-        status = new JTextArea("ON");
-        status.setFont(new Font("Georgia", Font.PLAIN, 16));
+        system.setFont(fontSmall);
+        status = new JLabel("ON");
+        status.setFont(fontSmall);
+        status.setForeground(Color.decode("#3e5266"));
         statusSwitch = new JButton("TURN OFF");
-        statusSwitch.setFont(new Font("Georgia", Font.PLAIN, 16));
+        statusSwitch.setFont(fontSmall);
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel.add(system);
         panel.add(status);
         panel.add(statusSwitch);
-        panel.setBorder(new TitledBorder(new EtchedBorder(), "Status"));
+
+        TitledBorder border = new TitledBorder(new EtchedBorder(), "Status");
+        panel.setBorder(border);
+        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontBig);
 
         return panel;
     }
 
     private JPanel createTemp() {
         temperature = new JLabel("Current Temperature: ");
-        temperature.setFont(new Font("Georgia", Font.PLAIN, 16));
-        curTemp = new JTextField("70", 3);
-        curTemp.setFont(new Font("Georgia", Font.PLAIN, 16));
+        temperature.setFont(fontSmall);
+        curTemp = new JLabel("70");
+        curTemp.setFont(fontSmall);
+        curTemp.setForeground(Color.decode("#3e5266"));
         tempUnit = createTempUnit();
-//        higherTemp = new JButton("+");
-//        lowerTemp = new JButton("-");
+        tempUnit.setFont(fontSmall);
+        higherTemp = new JButton("+");
+        higherTemp.setFont(fontSmall);
+        lowerTemp = new JButton("-");
+        lowerTemp.setFont(fontSmall);
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel.add(temperature);
         panel.add(curTemp);
         panel.add(tempUnit);
-//        panel.add(higherTemp);
-//        panel.add(lowerTemp);
+        panel.add(higherTemp);
+        panel.add(lowerTemp);
         panel.setBorder(new TitledBorder(new EtchedBorder(), "Temperature"));
+        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontBig);
 
         return panel;
     }
     private JComboBox createTempUnit() {
         String[] tempUnit = {"℉", "℃"};
         JComboBox comboBox = new JComboBox(tempUnit);
-        comboBox.setForeground(Color.BLUE);
-        comboBox.setFont(new Font("Georgia", Font.BOLD, 14));
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
     }

@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -15,6 +16,8 @@ class ConfigPanel extends JPanel {
     private JPanel southGroupPanel1;
     private JPanel eastGroupPanel1;
     private JPanel westGroupPanel1;
+    Font fontBig = new Font("Georgia", Font.BOLD, 22);
+    Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
 
     public ConfigPanel() {
         super();
@@ -39,22 +42,28 @@ class ConfigPanel extends JPanel {
         JPanel group = new JPanel(new GridLayout(0, 1));
         group.add(panel1);
         group.add(panel2);
-        group.setBorder(new TitledBorder(new EtchedBorder(), groupName));
+        Border border = new TitledBorder(new EtchedBorder(), groupName);
+        group.setBorder(border);
+        ((javax.swing.border.TitledBorder) group.getBorder()).setTitleFont(fontBig);
         return group;
     }
 
     private JPanel createPanel1() {
-        Font font = new Font("Georgia", Font.BOLD, 14);
 
         JLabel dateHead = new JLabel("Day");
+        dateHead.setFont(fontSmall);
         JComboBox dateCombo = createDate();
         JLabel timeHead = new JLabel("Time");
+        timeHead.setFont(fontSmall);
         JComboBox startHourCombo = createHour();
         JLabel timeLabel1 = new JLabel(":");
+        timeLabel1.setFont(fontSmall);
         JComboBox startMinCombo = createMin();
         JLabel to = new JLabel("to");
+        to.setFont(fontSmall);
         JComboBox endHourCombo = createHour();
         JLabel timeLabel2 = new JLabel(":");
+        timeLabel2.setFont(fontSmall);
         JComboBox endMinCombo = createMin();
 
         JPanel panel = new JPanel(new FlowLayout());
@@ -74,22 +83,25 @@ class ConfigPanel extends JPanel {
     }
 
     private JPanel createPanel2() {
-        Font font = new Font("Georgia", Font.BOLD, 14);
 
         JLabel tempHead = new JLabel("Temperature limit");
+        tempHead.setFont(fontSmall);
         JLabel upperHead = new JLabel("Upper:");
+        upperHead.setFont(fontSmall);
         JTextField upperLimit = new JTextField(3);
-        upperLimit.setFont(font);
-        upperLimit.setForeground(Color.BLUE);
+        upperLimit.setFont(fontSmall);
+        upperLimit.setForeground(Color.decode("#3e5266"));
         JComboBox tempCombo1 = createTempUnit();
         JLabel lowerHead = new JLabel("Lower: ");
+        lowerHead.setFont(fontSmall);
         JTextField lowerLimit = new JTextField(3);
-        lowerLimit.setFont(font);
-        lowerLimit.setForeground(Color.BLUE);
+        lowerLimit.setFont(fontSmall);
+        lowerLimit.setForeground(Color.decode("#3e5266"));
         JComboBox tempCombo2 = createTempUnit();
 
         JButton save = new JButton("Save");
-        save.setFont(font);
+        save.setFont(fontSmall);
+        save.setForeground(Color.decode("#3e5266"));
 
         JPanel newLinePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         newLinePanel.add(tempHead);
@@ -108,24 +120,24 @@ class ConfigPanel extends JPanel {
     private JComboBox createDate() {
         String[] date = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         JComboBox comboBox = new JComboBox(date);
-        comboBox.setForeground(Color.BLUE);
-        comboBox.setFont(new Font("Georgia", Font.BOLD, 14));
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
     }
     private JComboBox createHour() {
         String[] hour = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
         JComboBox comboBox = new JComboBox(hour);
-        comboBox.setForeground(Color.BLUE);
-        comboBox.setFont(new Font("Georgia", Font.BOLD, 14));
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
     }
     private JComboBox createMin() {
         String[] minute = {"00", "15", "30", "45"};
         JComboBox comboBox = new JComboBox(minute);
-        comboBox.setForeground(Color.BLUE);
-        comboBox.setFont(new Font("Georgia", Font.BOLD, 14));
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
 
@@ -133,8 +145,8 @@ class ConfigPanel extends JPanel {
     private JComboBox createTempUnit() {
         String[] tempUnit = {"℉", "℃"};
         JComboBox comboBox = new JComboBox(tempUnit);
-        comboBox.setForeground(Color.BLUE);
-        comboBox.setFont(new Font("Georgia", Font.BOLD, 14));
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
     }
