@@ -47,7 +47,9 @@ class OverviewPanel extends JPanel{
         status.setFont(fontSmall);
         status.setForeground(Color.decode("#3e5266"));
         statusSwitch = new JButton("TURN OFF");
+        statusSwitch.setOpaque(true);
         statusSwitch.setFont(fontSmall);
+        statusSwitch.setBackground(Color.decode("#3e5266"));
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -72,8 +74,10 @@ class OverviewPanel extends JPanel{
         tempUnit.setFont(fontSmall);
         higherTemp = new JButton("+");
         higherTemp.setFont(fontSmall);
+        higherTemp.setBackground(Color.decode("#3e5266"));
         lowerTemp = new JButton("-");
         lowerTemp.setFont(fontSmall);
+        lowerTemp.setBackground(Color.decode("#3e5266"));
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
