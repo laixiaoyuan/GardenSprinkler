@@ -16,6 +16,7 @@ class ConfigPanel extends JPanel {
     private JPanel southGroupPanel1;
     private JPanel eastGroupPanel1;
     private JPanel westGroupPanel1;
+    private JPanel notePanel;
     Font fontBig = new Font("Georgia", Font.BOLD, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
 
@@ -25,6 +26,7 @@ class ConfigPanel extends JPanel {
         southGroupPanel1 = createconfigPanel("Group South");
         eastGroupPanel1 = createconfigPanel("Group East ");
         westGroupPanel1 = createconfigPanel("Group West ");
+        notePanel = createNotePanel();
 
         masterPanel = new JPanel();
         masterPanel.setLayout(new GridLayout(0, 1));
@@ -32,6 +34,7 @@ class ConfigPanel extends JPanel {
         masterPanel.add(southGroupPanel1);
         masterPanel.add(eastGroupPanel1);
         masterPanel.add(westGroupPanel1);
+        masterPanel.add(notePanel);
 
         add(masterPanel);
     }
@@ -66,10 +69,14 @@ class ConfigPanel extends JPanel {
         timeLabel2.setFont(fontSmall);
         JComboBox endMinCombo = createMin();
 
+        JLabel volumeHeader = new JLabel("Volume*");
+        volumeHeader.setFont(fontSmall);
+        JComboBox volume = createVolume();
+
         JPanel panel = new JPanel(new FlowLayout());
         panel.add(dateHead);
         panel.add(dateCombo);
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(Box.createRigidArea(new Dimension(10, 0)));
         panel.add(timeHead);
         panel.add(startHourCombo);
         panel.add(timeLabel1);
@@ -78,26 +85,30 @@ class ConfigPanel extends JPanel {
         panel.add(endHourCombo);
         panel.add(timeLabel2);
         panel.add(endMinCombo);
-
+        panel.add(Box.createRigidArea(new Dimension(10, 0)));
+        panel.add(volumeHeader);
+        panel.add(volume);
         return panel;
     }
 
     private JPanel createPanel2() {
 
-        JLabel tempHead = new JLabel("Temperature limit");
+        JLabel tempHead = new JLabel("Temperature limit -");
         tempHead.setFont(fontSmall);
-        JLabel upperHead = new JLabel("Upper:");
+        JLabel upperHead = new JLabel("Upper");
         upperHead.setFont(fontSmall);
         JTextField upperLimit = new JTextField(3);
         upperLimit.setFont(fontSmall);
         upperLimit.setForeground(Color.decode("#3e5266"));
         JComboBox tempCombo1 = createTempUnit();
-        JLabel lowerHead = new JLabel("Lower: ");
+        JLabel lowerHead = new JLabel("Lower");
         lowerHead.setFont(fontSmall);
         JTextField lowerLimit = new JTextField(3);
         lowerLimit.setFont(fontSmall);
         lowerLimit.setForeground(Color.decode("#3e5266"));
         JComboBox tempCombo2 = createTempUnit();
+
+
 
         JButton save = new JButton("Save");
         save.setFont(fontSmall);
@@ -105,16 +116,26 @@ class ConfigPanel extends JPanel {
 
         JPanel newLinePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         newLinePanel.add(tempHead);
-        newLinePanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        newLinePanel.add(Box.createRigidArea(new Dimension(10, 0)));
         newLinePanel.add(upperHead);
         newLinePanel.add(upperLimit);
         newLinePanel.add(tempCombo1);
         newLinePanel.add(lowerHead);
         newLinePanel.add(lowerLimit);
         newLinePanel.add(tempCombo2);
-        newLinePanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        newLinePanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
         newLinePanel.add(save);
         return newLinePanel;
+    }
+
+    private JPanel createNotePanel() {
+        JLabel note = new JLabel("*Volume is set by gallon per minute per sprinkler");
+        note.setFont(new Font("Georgia", Font.PLAIN, 14));
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel.add(note);
+        return panel;
     }
 
     private JComboBox createDate() {
@@ -145,6 +166,15 @@ class ConfigPanel extends JPanel {
     private JComboBox createTempUnit() {
         String[] tempUnit = {"℉", "℃"};
         JComboBox comboBox = new JComboBox(tempUnit);
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
+        comboBox.setEditable(false);
+        return comboBox;
+    }
+
+    private JComboBox createVolume() {
+        String[] volume = {"10", "20", "30", "40", "50", "60"};
+        JComboBox comboBox = new JComboBox(volume);
         comboBox.setForeground(Color.decode("#3e5266"));
         comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
