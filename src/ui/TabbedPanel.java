@@ -11,6 +11,7 @@ class TabbedPanel {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height;
         int width = screenSize.width;
+        System.out.println(height+ " "+ width);
         System.out.println(width);
         frame.setSize(width * 3 / 4, height * 3 / 4);
         frame.setLocationRelativeTo(null);

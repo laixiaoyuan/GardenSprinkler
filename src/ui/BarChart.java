@@ -1,59 +1,65 @@
 package ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.geom.*;
 
 class BarChart extends JPanel {
-    private Map<Color, Integer> bars = new LinkedHashMap<Color, Integer>();
-    public BarChart()
-    {
-        setPreferredSize(new Dimension(500,500));
+    private List<Integer> bars = new ArrayList<Integer>();
+    Font fontBig = new Font("Georgia", Font.PLAIN, 22);
+
+    public BarChart() {
+        setPreferredSize(new Dimension(800,800));
     }
     /**
      * Add new bar to chart
-     * @param color color to display bar
      * @param value size of bar
      */
-    public void addBar(Color color, int value)
-    {
-        bars.put(color, value);
+    public void addBar(int value) {
+        bars.add(value);
         // cannot call paintComponent() or paint() directly
         repaint();
     }
 
     @Override
-    protected void paintComponent(Graphics g)
-    {
+    protected void paintComponent(Graphics g) {
         // determine longest bar
         int max = Integer.MIN_VALUE;
-        for (Integer value : bars.values())
-        {
-            max = Math.max(max, value);
+        for (int i = 0; i < bars.size(); i++) {
+            max = Math.max(max, bars.get(i));
         }
+        max = max + 10;
         // paint bars
 
         int width = (getWidth() / bars.size()) - 100;
-        int x = 1;
-        for (Color color : bars.keySet())
-        {
-            int value = bars.get(color);
-            int height = (int)
-                    ((getHeight()-5) * ((double)value / max));
-            g.setColor(color);
+        int x = 20;
+        for (int i = 0; i < bars.size(); i++) {
+            int value = bars.get(i);
+            String valueInfo = new Integer(value).toString();
+            int height = (int) ((getHeight()-5) * ((double)value / max));
+            if (value > 60) {
+                g.setColor(Color.decode("#ff9595"));
+            }
+            else {
+                g.setColor(Color.decode("#9595ff"));
+            }
             g.fillRect(x, getHeight() - height, width, height);
             g.setColor(Color.black);
-            g.drawRect(x, getHeight() - height, width, height);
+            g.setFont(fontBig);
+
+            g.drawString(valueInfo, x, getHeight() - height - 10);
+//            g.drawRect(x, getHeight() - height, width, height);
             x += (width + 2);
         }
     }
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(bars.size() * 10 + 2, 50);
+        return new Dimension(bars.size() + 2, 50);
     }
 
 }
