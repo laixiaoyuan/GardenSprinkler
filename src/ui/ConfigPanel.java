@@ -1,5 +1,6 @@
 package ui;
 
+import system.Schedule;
 import system.SprinklerGroup;
 
 import javax.swing.*;
@@ -8,53 +9,198 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by Lexie on 11/17/16.
  */
 class ConfigPanel extends JPanel {
 
-    private JPanel masterPanel;
-    private JPanel northGroupPanel1;
-    private JPanel southGroupPanel1;
-    private JPanel eastGroupPanel1;
-    private JPanel westGroupPanel1;
+    private JPanel sysTempLimitPanel;
+    private JPanel northGroupPanel;
+    private JPanel southGroupPanel;
+    private JPanel eastGroupPanel;
+    private JPanel westGroupPanel;
+    private JPanel addSchedulePanel;
     private JPanel notePanel;
+
     Font fontBig = new Font("Georgia", Font.BOLD, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
 
     public ConfigPanel() {
         super();
-        northGroupPanel1 = createconfigPanel("Group North");
-        southGroupPanel1 = createconfigPanel("Group South");
-        eastGroupPanel1 = createconfigPanel("Group East ");
-        westGroupPanel1 = createconfigPanel("Group West ");
+
+        sysTempLimitPanel = createSysTempLimitPanel();
+        northGroupPanel = createconfigPanel("Group North");
+        southGroupPanel = createconfigPanel("Group South");
+        eastGroupPanel = createconfigPanel("Group East ");
+        westGroupPanel = createconfigPanel("Group West ");
         notePanel = createNotePanel();
+        addSchedulePanel = createAddSchedulePanel();
 
-        masterPanel = new JPanel();
-        masterPanel.setLayout(new GridLayout(0, 1));
-        masterPanel.add(northGroupPanel1);
-        masterPanel.add(southGroupPanel1);
-        masterPanel.add(eastGroupPanel1);
-        masterPanel.add(westGroupPanel1);
-        masterPanel.add(notePanel);
+        JScrollPane northScroll = new JScrollPane(northGroupPanel);
+        JScrollPane southScroll = new JScrollPane(southGroupPanel);
+        JScrollPane eastScroll = new JScrollPane(eastGroupPanel);
+        JScrollPane westScroll = new JScrollPane(westGroupPanel);
 
-        add(masterPanel);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(sysTempLimitPanel);
+        add(northScroll);
+        add(southScroll);
+        add(eastScroll);
+        add(westScroll);
+        add(addSchedulePanel);
+        add(notePanel);
+    }
+
+    private JPanel createSysTempLimitPanel() {
+
+        JLabel tempHead = new JLabel("System Temperature limit");
+        tempHead.setFont(fontSmall);
+        JLabel upperHead = new JLabel("Upper");
+        upperHead.setFont(fontSmall);
+        JTextField upperLimit = new JTextField(3);
+        upperLimit.setFont(fontSmall);
+        upperLimit.setForeground(Color.decode("#3e5266"));
+        JLabel tempUnit1 = new JLabel("℉");
+        JLabel lowerHead = new JLabel("Lower");
+        lowerHead.setFont(fontSmall);
+        JTextField lowerLimit = new JTextField(3);
+        lowerLimit.setFont(fontSmall);
+        lowerLimit.setForeground(Color.decode("#3e5266"));
+        JLabel tempUnit2 = new JLabel("℉");
+
+        JButton save = new JButton("Update");
+        save.setFont(fontSmall);
+        save.setForeground(Color.decode("#3e5266"));
+
+        JPanel newLinePanel = new JPanel();
+        newLinePanel.add(tempHead);
+        newLinePanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        newLinePanel.add(upperHead);
+        newLinePanel.add(upperLimit);
+        newLinePanel.add(tempUnit1);
+        newLinePanel.add(lowerHead);
+        newLinePanel.add(lowerLimit);
+        newLinePanel.add(tempUnit2);
+        newLinePanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+        newLinePanel.add(save);
+        return newLinePanel;
     }
 
     private JPanel createconfigPanel(String groupName) {
-        JPanel panel1 = createPanel1();
-        JPanel panel2 = createPanel2();
-        JPanel group = new JPanel(new GridLayout(0, 1));
-        group.add(panel1);
-        group.add(panel2);
+        JPanel group = new JPanel();
+        group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
         Border border = new TitledBorder(new EtchedBorder(), groupName);
         group.setBorder(border);
         ((javax.swing.border.TitledBorder) group.getBorder()).setTitleFont(fontBig);
+
+        JPanel buttonPanel = new JPanel();
+        JLabel volumeHeader = new JLabel("set volume*");
+        volumeHeader.setFont(fontSmall);
+        JComboBox volumeComboBox = createVolume();
+
+        JButton saveBtn = new JButton("Save Schedule");
+        saveBtn.setFont(fontSmall);
+        saveBtn.setForeground(Color.decode("#3e5266"));
+        JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setFont(fontSmall);
+        refreshBtn.setForeground(Color.decode("#3e5266"));
+
+        buttonPanel.add(volumeHeader);
+        buttonPanel.add(volumeComboBox);
+        buttonPanel.add(saveBtn);
+        buttonPanel.add(refreshBtn);
+
+        group.add(buttonPanel);
+
         return group;
     }
 
-    private JPanel createPanel1() {
+    // get a list of Schedule by groupName and show on the UI
+    public void createEachScheduleShowPanel(String groupName, List<Schedule> scheduleList) {
+        JPanel parentPanel = getPanelBasedOnName(groupName);
+        for (int i = 0; i < scheduleList.size(); i++) {
+            JLabel scheduleID = new JLabel();
+            scheduleID.setText(scheduleList.get(i).getID());
+            scheduleID.setVisible(false);
+
+            String day = transferScheduleDayFromIntToString(scheduleList.get(i).getDay());
+            int startHour = scheduleList.get(i).getStartHour();
+            int startMin = scheduleList.get(i).getStartMin();
+            int endHour = scheduleList.get(i).getEndHour();
+            int endMin = scheduleList.get(i).getEndMin();
+
+            JTextArea scheduleDisplay = new JTextArea();
+            scheduleDisplay.setText(day + " " + startHour + ":" + startMin + " to " + endHour + ":" + endMin);
+            scheduleDisplay.setFont(fontSmall);
+            scheduleDisplay.setEditable(false);
+
+            JPanel individualSchedulePanel = new JPanel();
+            individualSchedulePanel.add(scheduleID);
+            individualSchedulePanel.add(scheduleDisplay);
+            JButton deleteBtn = new JButton("Delete");
+            deleteBtn.setForeground(Color.decode("#3e5266"));
+            individualSchedulePanel.add(deleteBtn);
+
+            parentPanel.add(individualSchedulePanel);
+        }
+    }
+
+
+
+
+
+    public String transferScheduleDayFromIntToString(int day) {
+        switch(day) {
+            case 1:
+                return "Sunday";
+            case 2:
+                return "Monday";
+            case 3:
+                return "Tuesday";
+            case 4:
+                return "Wednesday";
+            case 5:
+                return "Thursday";
+            case 6:
+                return "Friday";
+            case 7:
+                return "Saturday";
+            default:
+                System.out.println("Schedule day is not valid");
+                return null;
+        }
+    }
+
+    public Integer transferScheduleDayFromStringToInt (String day) {
+        switch (day) {
+            case "Sunday":
+                return 1;
+            case "Monday":
+                return 2;
+            case "Tuesday":
+                return 3;
+            case "Wednesday":
+                return 4;
+            case "Thursday":
+                return 5;
+            case "Friday":
+                return 6;
+            case "Saturday":
+                return 7;
+            default:
+                return null;
+        }
+    }
+
+    private JPanel createAddSchedulePanel() {
+
+        JLabel groupNameHead = new JLabel("Group");
+        groupNameHead.setFont(fontSmall);
+        JComboBox groupNameCombo = createGroupNameCombo();
 
         JLabel dateHead = new JLabel("Day");
         dateHead.setFont(fontSmall);
@@ -71,12 +217,14 @@ class ConfigPanel extends JPanel {
         JLabel timeLabel2 = new JLabel(":");
         timeLabel2.setFont(fontSmall);
         JComboBox endMinCombo = createMin();
-
-        JLabel volumeHeader = new JLabel("Volume*");
-        volumeHeader.setFont(fontSmall);
-        JComboBox volume = createVolume();
+        JButton addBtn = new JButton("Add");
+        addBtn.setFont(fontSmall);
+        addBtn.setForeground(Color.decode("#3e5266"));
 
         JPanel panel = new JPanel(new FlowLayout());
+        panel.add(groupNameHead);
+        panel.add(groupNameCombo);
+        panel.add(Box.createRigidArea(new Dimension(10, 0)));
         panel.add(dateHead);
         panel.add(dateCombo);
         panel.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -89,45 +237,13 @@ class ConfigPanel extends JPanel {
         panel.add(timeLabel2);
         panel.add(endMinCombo);
         panel.add(Box.createRigidArea(new Dimension(10, 0)));
-        panel.add(volumeHeader);
-        panel.add(volume);
+        panel.add(addBtn);
+
+        Border border = new TitledBorder(new EtchedBorder(), "Add Schedule");
+        panel.setBorder(border);
+        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontSmall);
+
         return panel;
-    }
-
-    private JPanel createPanel2() {
-
-        JLabel tempHead = new JLabel("Temperature limit -");
-        tempHead.setFont(fontSmall);
-        JLabel upperHead = new JLabel("Upper");
-        upperHead.setFont(fontSmall);
-        JTextField upperLimit = new JTextField(3);
-        upperLimit.setFont(fontSmall);
-        upperLimit.setForeground(Color.decode("#3e5266"));
-        JComboBox tempCombo1 = createTempUnit();
-        JLabel lowerHead = new JLabel("Lower");
-        lowerHead.setFont(fontSmall);
-        JTextField lowerLimit = new JTextField(3);
-        lowerLimit.setFont(fontSmall);
-        lowerLimit.setForeground(Color.decode("#3e5266"));
-        JComboBox tempCombo2 = createTempUnit();
-
-        JButton save = new JButton("Save");
-        save.setFont(fontSmall);
-        save.setForeground(Color.decode("#3e5266"));
-
-        JPanel newLinePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        newLinePanel.add(tempHead);
-        newLinePanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        newLinePanel.add(upperHead);
-        newLinePanel.add(upperLimit);
-        newLinePanel.add(tempCombo1);
-        newLinePanel.add(lowerHead);
-        newLinePanel.add(lowerLimit);
-        newLinePanel.add(tempCombo2);
-        newLinePanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
-        newLinePanel.add(save);
-        return newLinePanel;
     }
 
     private JPanel createNotePanel() {
@@ -139,6 +255,33 @@ class ConfigPanel extends JPanel {
         return panel;
     }
 
+    public JPanel getPanelBasedOnName(String name) {
+        switch (name) {
+            case "SYSTEMTEMP":
+                return sysTempLimitPanel;
+            case "NORTH":
+                return northGroupPanel;
+            case "SOUTH":
+                return southGroupPanel;
+            case "EAST":
+                return eastGroupPanel;
+            case "WEST":
+                return westGroupPanel;
+            case "ADD":
+                return addSchedulePanel;
+            default:
+                System.out.println("No matching group names");
+                return new JPanel();
+        }
+    }
+    private JComboBox createGroupNameCombo() {
+        String[] groupName = {"NORTH", "SOUTH", "EAST", "WEST"};
+        JComboBox comboBox = new JComboBox(groupName);
+        comboBox.setForeground(Color.decode("#3e5266"));
+        comboBox.setFont(fontSmall);
+        comboBox.setEditable(false);
+        return comboBox;
+    }
     private JComboBox createDate() {
         String[] date = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         JComboBox comboBox = new JComboBox(date);
@@ -164,14 +307,6 @@ class ConfigPanel extends JPanel {
         return comboBox;
 
     }
-    private JComboBox createTempUnit() {
-        String[] tempUnit = {"℉", "℃"};
-        JComboBox comboBox = new JComboBox(tempUnit);
-        comboBox.setForeground(Color.decode("#3e5266"));
-        comboBox.setFont(fontSmall);
-        comboBox.setEditable(false);
-        return comboBox;
-    }
 
     private JComboBox createVolume() {
         String[] volume = {"10", "20", "30", "40", "50", "60"};
@@ -182,15 +317,51 @@ class ConfigPanel extends JPanel {
         return comboBox;
     }
 
-    public void getConfiguration(SprinklerGroup goupName) {
-        // get weekly schedule
+
+    public Schedule getAddedScheduleConfig() {
+        JPanel addPanel = getPanelBasedOnName("ADD");
+        String groupName = ((JComboBox)addPanel.getComponent(1)).getSelectedItem().toString();
+        int day = transferScheduleDayFromStringToInt(((JComboBox)addPanel.getComponent(4)).getSelectedItem().toString());
+        int startHour = Integer.parseInt(((JComboBox)addPanel.getComponent(7)).getSelectedItem().toString());
+        int startMin = Integer.parseInt(((JComboBox)addPanel.getComponent(9)).getSelectedItem().toString());
+        int endHour = Integer.parseInt(((JComboBox)addPanel.getComponent(11)).getSelectedItem().toString());
+        int endMin = Integer.parseInt(((JComboBox)addPanel.getComponent(13)).getSelectedItem().toString());
+
+        // create a Schedule object
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String scheduleID = "" + timestamp.getTime();
+        Schedule schedule = new Schedule(scheduleID, day, startHour, startMin, endHour, endMin);
+
+//        List<Schedule> schedulesList = getLocalScheduleList(groupName);
+//        schedulesList.add(schedule);
+        return schedule;
     }
 
-    public void addSelectedSpinklerListener(ActionListener listener) {
+    public void addUpdateTempConfigListener(String panelName, ActionListener listener) {
+        ((JButton)getPanelBasedOnName(panelName).getComponent(9)).addActionListener(listener);
+    }
+
+    public void addAddConfigListener(ActionListener listener) {
+        ((JButton)getPanelBasedOnName("ADD").getComponent(15)).addActionListener(listener);
 
     }
 
-    public void addSaveConfiglistener(ActionListener listener) {
-
+    public void addSaveScheduleListener(String groupName, ActionListener listener) {
+        JPanel individualPanel = (JPanel)getPanelBasedOnName(groupName).getComponent(0);
+        ((JButton)individualPanel.getComponent(2)).addActionListener(listener);
     }
+
+    public void addRefreshScheduleListener(String groupName, ActionListener listener) {
+        JPanel individualPanel = (JPanel)getPanelBasedOnName(groupName).getComponent(0);
+        ((JButton)individualPanel.getComponent(3)).addActionListener(listener);
+    }
+
+    public void addDeleteConfigListener(String groupName, ActionListener listener) {
+        JPanel panel = getPanelBasedOnName(groupName);
+        for (int i = 1; i < panel.getComponentCount(); i++) {
+            JPanel individualPanel = (JPanel)panel.getComponent(i);
+            ((JButton)individualPanel.getComponent(2)).addActionListener(listener);
+        }
+    }
+
 }

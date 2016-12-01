@@ -32,6 +32,8 @@ class ConsumPanel extends JPanel {
         add(barChart);
     }
 
+
+
     private JPanel createGroupSelection() {
         JButton systemButton = new JButton("System");
         systemButton.setFont(fontBig);

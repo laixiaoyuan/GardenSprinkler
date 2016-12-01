@@ -21,8 +21,8 @@ public class UI extends JFrame{
 
     public UI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        height = screenSize.height / 2;
-        width = screenSize.width / 2;
+        height = screenSize.height * 3 / 4;
+        width = screenSize.width * 3 / 4;
 
         tabbedPane = new JTabbedPane();
         overviewPanel = new OverviewPanel();

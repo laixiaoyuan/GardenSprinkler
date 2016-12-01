@@ -7,7 +7,7 @@ public class WeeklySchedule {
 
     }
 
-    public void setWeeklySchedule(int day, Pattern p){
+    public void setWeeklySchedule(int day, Schedule p){
 
     }
 

@@ -53,15 +53,15 @@ public class System {
 //	}
 
     public void setPattern(Sprinkler s, int day, Time start, Time stop){
-        Pattern newPattern = new Pattern(s.getID(),start,stop);
-        ws.setWeeklySchedule(day,newPattern);
+//        Schedule newPattern = new Schedule(s.getID(),start,stop);
+//        ws.setWeeklySchedule(day,newPattern);
     }
 
     public void setPattern(SprinklerGroup sg, int day, Time start, Time stop){
         List<Sprinkler> sList = sg.getSprinklerList();
         for(Sprinkler s : sList){
-            Pattern newPattern = new Pattern(s.getID(),start,stop);
-            ws.setWeeklySchedule(day,newPattern);
+//            Schedule newPattern = new Schedule(s.getID(),start,stop);
+//            ws.setWeeklySchedule(day,newPattern);
         }
     }
 

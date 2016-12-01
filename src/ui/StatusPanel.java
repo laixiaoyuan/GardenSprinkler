@@ -1,18 +1,9 @@
 package ui;
 
-import sun.jvm.hotspot.utilities.Assert;
-import system.Sprinkler;
-
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,24 +14,9 @@ class StatusPanel extends JPanel {
     private JButton refreshBtn;
 
     private JPanel masterPaneNorth;
-    private JLabel groupNorth;
-    private JLabel northStatus;
-    private JButton northGroupBtn;
-
     private JPanel masterPaneSouth;
-    private JLabel groupSouth;
-    private JLabel southStatus;
-    private JButton southGroupBtn;
-
     private JPanel masterPaneEast;
-    private JLabel groupEast;
-    private JLabel eastStatus;
-    private JButton eastGroupBtn;
-
     private JPanel masterPaneWest;
-    private JLabel groupWest;
-    private JLabel westStatus;
-    private JButton westGroupBtn;
 
     Font fontBig = new Font("Georgia", Font.BOLD, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
@@ -113,7 +89,7 @@ class StatusPanel extends JPanel {
         }
     }
 
-    public JPanel getPanelBasedOnName(String name) {
+    private JPanel getPanelBasedOnName(String name) {
         switch (name) {
             case "NORTH":
                 return masterPaneNorth;
@@ -141,19 +117,19 @@ class StatusPanel extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
 
-        JLabel sprinklerName = new JLabel("ID");
+        JLabel sprinklerName = new JLabel();
         sprinklerName.setText("" + sprinklerID);
         sprinklerName.setFont(fontSmall);
 
-        JLabel sprinklerCurrentlyOn = new JLabel("ON?NOTON");
+        JLabel sprinklerCurrentlyOn = new JLabel();
         sprinklerCurrentlyOn.setText(sprinklerStatusMap[0] ? "ON" : "NOT ON");
         sprinklerCurrentlyOn.setFont(fontSmall);
 
-        JLabel sprinklerFunctional = new JLabel("FUNCTIONAL");
+        JLabel sprinklerFunctional = new JLabel();
         sprinklerFunctional.setText(sprinklerStatusMap[1] ? "FUNCTIONING OK" : "FUNCTIONING NOT OK");
         sprinklerFunctional.setFont(fontSmall);
 
-        JButton sprinklerStatusChange = new JButton("StatusChange");
+        JButton sprinklerStatusChange = new JButton();
         sprinklerStatusChange.setText(sprinklerStatusMap[0] ? "DISABLE" : "ENABLE");
         sprinklerStatusChange.setFont(fontSmall);
 
