@@ -20,9 +20,6 @@ public class UIController {
     public UIController() {
         frame = new UI();
 
-
-
-
     }
 
     private List<Schedule> getLocalScheduleList(String groupName) {

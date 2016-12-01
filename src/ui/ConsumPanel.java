@@ -117,6 +117,7 @@ class ConsumPanel extends JPanel {
 
 
     public void saveConsumptionArrayToLocal(String name, int[] consumArray) {
+        reverseArray(consumArray);
         switch (name) {
             case "SYSTEM":
                 sysConsum = consumArray;
@@ -136,6 +137,14 @@ class ConsumPanel extends JPanel {
             default:
                 System.out.println("Invalid name input");
                 break;
+        }
+    }
+
+    private void reverseArray(int[] array){
+        for(int i = 0; i < array.length / 2; i++) {
+            int temp = array[i];
+            array[i] = array[array.length - i - 1];
+            array[array.length - i - 1] = temp;
         }
     }
 
