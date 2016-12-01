@@ -1,8 +1,11 @@
 package ui;
 
+import system.Temperature;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 
 /**
@@ -16,9 +19,10 @@ class OverviewPanel extends JPanel{
     JButton statusSwitch;
     JLabel temperature;
     JLabel curTemp;
-    JComboBox tempUnit;
+    JLabel tempUnit;
     JButton higherTemp;
     JButton lowerTemp;
+
     Font fontBig = new Font("Georgia", Font.BOLD, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
 
@@ -43,10 +47,10 @@ class OverviewPanel extends JPanel{
     public JPanel createSysStatus() {
         system = new JLabel("System Status: ");
         system.setFont(fontSmall);
-        status = new JLabel("ON");
+        status = new JLabel();
         status.setFont(fontSmall);
         status.setForeground(Color.decode("#3e5266"));
-        statusSwitch = new JButton("TURN OFF");
+        statusSwitch = new JButton();
         statusSwitch.setOpaque(true);
         statusSwitch.setFont(fontSmall);
         statusSwitch.setBackground(Color.decode("#3e5266"));
@@ -67,10 +71,10 @@ class OverviewPanel extends JPanel{
     private JPanel createTemp() {
         temperature = new JLabel("Current Temperature: ");
         temperature.setFont(fontSmall);
-        curTemp = new JLabel("70");
+        curTemp = new JLabel();
         curTemp.setFont(fontSmall);
         curTemp.setForeground(Color.decode("#3e5266"));
-        tempUnit = createTempUnit();
+        tempUnit = new JLabel("℉");
         tempUnit.setFont(fontSmall);
         higherTemp = new JButton("+");
         higherTemp.setFont(fontSmall);
@@ -91,13 +95,40 @@ class OverviewPanel extends JPanel{
 
         return panel;
     }
-    private JComboBox createTempUnit() {
-        String[] tempUnit = {"℉", "℃"};
-        JComboBox comboBox = new JComboBox(tempUnit);
-        comboBox.setForeground(Color.decode("#3e5266"));
-        comboBox.setFont(fontSmall);
-        comboBox.setEditable(false);
-        return comboBox;
+//    private JComboBox createTempUnit() {
+//        String[] tempUnit = {"℉", "℃"};
+//        JComboBox comboBox = new JComboBox(tempUnit);
+//        comboBox.setForeground(Color.decode("#3e5266"));
+//        comboBox.setFont(fontSmall);
+//        comboBox.setEditable(false);
+//        return comboBox;
+//    }
+
+    public void showSysStatus(boolean isSysOn) {
+        if (isSysOn) {
+            status.setText("ON");
+            statusSwitch.setText("TURN OFF");
+        }
+        else {
+            status.setText("OFF");
+            statusSwitch.setText("TURN ON");
+        }
+    }
+
+    public void showSysTempValue(int tempValue) {
+        curTemp.setText("" + tempValue);
+    }
+
+    public void addSysStatusListener(ActionListener listener) {
+        statusSwitch.addActionListener(listener);
+    }
+
+    public void addSysTempIncreaseListener(ActionListener listener) {
+        higherTemp.addActionListener(listener);
+    }
+
+    public void addSysTempDecreaseListener(ActionListener listener) {
+        lowerTemp.addActionListener(listener);
     }
 
 }

@@ -1,10 +1,13 @@
 package ui;
 
+import system.SprinklerGroup;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Lexie on 11/17/16.
@@ -179,5 +182,17 @@ class ConfigPanel extends JPanel {
         comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
+    }
+
+    public void getConfiguration(SprinklerGroup goupName) {
+        // get weekly schedule
+    }
+
+    public void addSelectedSpinklerListener(ActionListener listener) {
+
+    }
+
+    public void addSaveConfiglistener(ActionListener listener) {
+
     }
 }
