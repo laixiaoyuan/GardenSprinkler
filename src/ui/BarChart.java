@@ -12,8 +12,10 @@ import java.awt.geom.*;
 class BarChart extends JPanel {
     private List<Integer> bars = new ArrayList<Integer>();
     Font fontBig = new Font("Georgia", Font.PLAIN, 22);
+    int volumeWarning;
 
-    public BarChart() {
+    public BarChart(int volumeWarning) {
+        this.volumeWarning = volumeWarning;
         setPreferredSize(new Dimension(800,800));
     }
     /**
@@ -41,8 +43,8 @@ class BarChart extends JPanel {
         for (int i = 0; i < bars.size(); i++) {
             int value = bars.get(i);
             String valueInfo = new Integer(value).toString();
-            int height = (int) ((getHeight()-5) * ((double)value / max));
-            if (value > 60) {
+            int height = (int) ((getHeight() - 50) * ((double)value / max));
+            if (value > volumeWarning) {
                 g.setColor(Color.decode("#ff9595"));
             }
             else {
