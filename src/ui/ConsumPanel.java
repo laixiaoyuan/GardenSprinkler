@@ -7,6 +7,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by Lexie on 11/17/16.
@@ -14,29 +16,23 @@ import java.util.ArrayList;
 class ConsumPanel extends JPanel {
     JPanel groupSelectionPanel;
     JPanel barChartPanel;
+    private JPanel cardPanel;
     BarChart barChart;
     Font fontBig = new Font("Georgia", Font.PLAIN, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
-    int height;
-    int width;
-
-    int[] sysConsum;
-    int[] northConsum;
-    int[] southConsum;
-    int[] eastConsum;
-    int[] westConsum;
-
 
     public ConsumPanel() {
         super();
         setLayout(new BorderLayout());
-        height = getHeight();
-        width = getWidth();
+
+        cardPanel = new JPanel();
+        CardLayout cards = new CardLayout();
+        cardPanel.setLayout(cards);
+
         groupSelectionPanel = createGroupSelection();
-        barChartPanel = createBarChartPanel();
 
         add(groupSelectionPanel, BorderLayout.NORTH);
-        add(barChartPanel, BorderLayout.CENTER);
+        add(cardPanel, BorderLayout.CENTER);
     }
 
     private JPanel createGroupSelection() {
@@ -64,45 +60,28 @@ class ConsumPanel extends JPanel {
 
         return panel;
     }
+//
+//    private JPanel createBarChartPanel() {
+//
+//
+//
+//        return cardPanel;
+//    }
 
-    private JPanel createBarChartPanel() {
-        // code below is just for test
-        sysConsum = new int[]{2201, 3401, 2501, 1101, 2301, 1501, 2301};
-        northConsum = new int[]{1201, 401, 501, 101, 301, 501, 301};
-        southConsum = new int[]{201, 401, 50, 110, 30, 50, 30};
-        eastConsum = new int[]{120, 40, 50, 10, 30, 50, 30};
-        westConsum = new int[]{20, 40, 150, 10, 30, 50, 30};
-        // code above is just for test
-
-        BarChart sysBarChart = createBarChartByGroup("SYSTEM", sysConsum);
-        BarChart northBarChart = createBarChartByGroup("NORTH", northConsum);
-        BarChart southBarChart = createBarChartByGroup("SOUTH", southConsum);
-        BarChart eastBarChart = createBarChartByGroup("EAST", eastConsum);
-        BarChart westBarChart = createBarChartByGroup("WEST", westConsum);
-
-        JPanel cardPanel = new JPanel();
-        CardLayout cards = new CardLayout();
-        cardPanel.setLayout(cards);
-
-        cardPanel.add(sysBarChart, "SYSTEM");
-        cardPanel.add(northBarChart, "NORTH");
-        cardPanel.add(southBarChart, "SOUTH");
-        cardPanel.add(eastBarChart, "EAST");
-        cardPanel.add(westBarChart, "WEST");
-
-        cards.show(cardPanel, "SYSTEM");
-
-        return cardPanel;
-    }
-
-    private BarChart createBarChartByGroup(String name, int[] consumption) {
+    public void createBarChartByGroup(String name, int[] consumption) {
+        reverseArray(consumption);
+        System.out.println("CONSUMPTION 0" + consumption[0]);
         BarChart barChart = new BarChart(getHighWaterVolumeWarning(name));
         for(int i = 0; i < consumption.length; i++) {
             barChart.addBar(consumption[i]);
         }
         barChart.setBorder(new CompoundBorder(new LineBorder(Color.decode("#ebf5ff")), new EmptyBorder(10, 10, 10, 10)));
 
-        return barChart;
+        cardPanel.add(barChart, name);
+
+        if (name.equals("SYSTEM")) {
+            ((CardLayout)cardPanel.getLayout()).show(cardPanel, name);
+        }
     }
 
     private int getHighWaterVolumeWarning(String name) {
@@ -114,31 +93,33 @@ class ConsumPanel extends JPanel {
         }
     }
 
-
-
-    public void saveConsumptionArrayToLocal(String name, int[] consumArray) {
-        reverseArray(consumArray);
-        switch (name) {
-            case "SYSTEM":
-                sysConsum = consumArray;
-                break;
-            case "NORTH":
-                northConsum = consumArray;
-                break;
-            case "SOUTH":
-                southConsum = consumArray;
-                break;
-            case "EAST":
-                eastConsum = consumArray;
-                break;
-            case "WEST":
-                westConsum = consumArray;
-                break;
-            default:
-                System.out.println("Invalid name input");
-                break;
-        }
-    }
+//    public void saveConsumptionArrayToLocal(String name, int[] consumArray) {
+//        if(consumArray == null) {
+//            System.out.println("saveConsumptionArrayToLocal NULL");
+//        }
+//        Collections.reverse(Arrays.asList(consumArray));
+//        switch (name) {
+//            case "SYSTEM":
+//                System.arraycopy(consumArray, 0, sysConsum, 0, consumArray.length);
+//                System.out.println("Length: " + sysConsum.length);
+//                break;
+//            case "NORTH":
+//                System.arraycopy(consumArray, 0, northConsum, 0, consumArray.length);
+//                break;
+//            case "SOUTH":
+//                System.arraycopy(consumArray, 0, southConsum, 0, consumArray.length);
+//                break;
+//            case "EAST":
+//                System.arraycopy(consumArray, 0, eastConsum, 0, consumArray.length);
+//                break;
+//            case "WEST":
+//                System.arraycopy(consumArray, 0, westConsum, 0, consumArray.length);
+//                break;
+//            default:
+//                System.out.println("Invalid name input");
+//                break;
+//        }
+//    }
 
     private void reverseArray(int[] array){
         for(int i = 0; i < array.length / 2; i++) {

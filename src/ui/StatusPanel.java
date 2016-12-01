@@ -55,8 +55,11 @@ class StatusPanel extends JPanel {
 
         JPanel northGroupPanel = new JPanel();
         JLabel groupDirection = new JLabel("direction");
+        groupDirection.setFont(fontSmall);
         JLabel groupStatus = new JLabel("status");
+        groupStatus.setFont(fontSmall);
         JButton groupBtn = new JButton("satusChange");
+        groupBtn.setFont(fontSmall);
         northGroupPanel.add(groupDirection);
         northGroupPanel.add(groupStatus);
         northGroupPanel.add(groupBtn);
@@ -67,25 +70,25 @@ class StatusPanel extends JPanel {
 
     public void showGroupStatus(Map<String, Boolean> groupStatusMap) {
         for (Map.Entry<String, Boolean> entry : groupStatusMap.entrySet()) {
-            JPanel masterPanel = getPanelBasedOnName(entry.getKey());
+            JPanel parentPanel = (JPanel)getPanelBasedOnName(entry.getKey()).getComponent(0);
             switch (entry.getKey()) {
                 case "NORTH":
-                    ((JLabel)masterPanel.getComponent(0)).setText("North Group");
+                    ((JLabel)parentPanel.getComponent(0)).setText("North Group");
                     break;
                 case "SOUTH":
-                    ((JLabel)masterPanel.getComponent(0)).setText("South Group");
+                    ((JLabel)parentPanel.getComponent(0)).setText("South Group");
                     break;
                 case "EAST":
-                    ((JLabel)masterPanel.getComponent(0)).setText("East Group");
+                    ((JLabel)parentPanel.getComponent(0)).setText("East Group");
                     break;
                 case "WEST":
-                    ((JLabel)masterPanel.getComponent(0)).setText("West Group");
+                    ((JLabel)parentPanel.getComponent(0)).setText("West Group");
                     break;
                 default:
                     System.out.println("No matching group names");
             }
-            ((JLabel)masterPanel.getComponent(1)).setText(entry.getValue() ? "ON" : "OFF");
-            ((JButton)masterPanel.getComponent(2)).setText(entry.getValue() ? "DISABLE" : "ENABLE");
+            ((JLabel)parentPanel.getComponent(1)).setText(entry.getValue() ? "ON" : "OFF");
+            ((JButton)parentPanel.getComponent(2)).setText(entry.getValue() ? "DISABLE" : "ENABLE");
         }
     }
 
@@ -118,7 +121,7 @@ class StatusPanel extends JPanel {
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
 
         JLabel sprinklerName = new JLabel();
-        sprinklerName.setText("" + sprinklerID);
+        sprinklerName.setText(sprinklerID);
         sprinklerName.setFont(fontSmall);
 
         JLabel sprinklerCurrentlyOn = new JLabel();

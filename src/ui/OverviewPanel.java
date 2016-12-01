@@ -53,7 +53,6 @@ class OverviewPanel extends JPanel{
         statusSwitch = new JButton();
         statusSwitch.setOpaque(true);
         statusSwitch.setFont(fontSmall);
-        statusSwitch.setBackground(Color.decode("#3e5266"));
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -78,10 +77,10 @@ class OverviewPanel extends JPanel{
         tempUnit.setFont(fontSmall);
         higherTemp = new JButton("+");
         higherTemp.setFont(fontSmall);
-        higherTemp.setBackground(Color.decode("#3e5266"));
+        higherTemp.setForeground(Color.decode("#3e5266"));
         lowerTemp = new JButton("-");
         lowerTemp.setFont(fontSmall);
-        lowerTemp.setBackground(Color.decode("#3e5266"));
+        lowerTemp.setForeground(Color.decode("#3e5266"));
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -115,11 +114,9 @@ class OverviewPanel extends JPanel{
         statusSwitch.addActionListener(listener);
     }
 
-    public void addSysTempIncreaseListener(ActionListener listener) {
-        higherTemp.addActionListener(listener);
-    }
 
-    public void addSysTempDecreaseListener(ActionListener listener) {
+    public void addSysTempChangeListener(ActionListener listener) {
+        higherTemp.addActionListener(listener);
         lowerTemp.addActionListener(listener);
     }
 
