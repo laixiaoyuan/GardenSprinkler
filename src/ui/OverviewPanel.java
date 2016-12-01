@@ -13,15 +13,15 @@ import java.awt.geom.Ellipse2D;
  */
 class OverviewPanel extends JPanel{
 
-    JPanel controlPanel;
-    JLabel system;
-    JLabel status;
-    JButton statusSwitch;
-    JLabel temperature;
-    JLabel curTemp;
-    JLabel tempUnit;
-    JButton higherTemp;
-    JButton lowerTemp;
+    private JPanel controlPanel;
+    private JLabel system;
+    private JLabel status;
+    private JButton statusSwitch;
+    private JLabel temperature;
+    private JLabel curTemp;
+    private JLabel tempUnit;
+    private JButton higherTemp;
+    private JButton lowerTemp;
 
     Font fontBig = new Font("Georgia", Font.BOLD, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
@@ -95,14 +95,6 @@ class OverviewPanel extends JPanel{
 
         return panel;
     }
-//    private JComboBox createTempUnit() {
-//        String[] tempUnit = {"℉", "℃"};
-//        JComboBox comboBox = new JComboBox(tempUnit);
-//        comboBox.setForeground(Color.decode("#3e5266"));
-//        comboBox.setFont(fontSmall);
-//        comboBox.setEditable(false);
-//        return comboBox;
-//    }
 
     public void showSysStatus(boolean isSysOn) {
         if (isSysOn) {

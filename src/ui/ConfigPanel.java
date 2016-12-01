@@ -111,8 +111,6 @@ class ConfigPanel extends JPanel {
         lowerLimit.setForeground(Color.decode("#3e5266"));
         JComboBox tempCombo2 = createTempUnit();
 
-
-
         JButton save = new JButton("Save");
         save.setFont(fontSmall);
         save.setForeground(Color.decode("#3e5266"));

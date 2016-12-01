@@ -1,5 +1,6 @@
 package ui;
 
+import sun.jvm.hotspot.utilities.Assert;
 import system.Sprinkler;
 
 import javax.swing.*;
@@ -19,10 +20,7 @@ import java.util.Map;
  */
 class StatusPanel extends JPanel {
 
-    private JTree tree;
-    private JLabel sprinklerName;
-    private JLabel status;
-    private JLabel function;
+    private JButton refreshBtn;
 
     private JPanel masterPaneNorth;
     private JLabel groupNorth;
@@ -49,12 +47,20 @@ class StatusPanel extends JPanel {
 
     public StatusPanel() {
         super();
-        setLayout(new GridLayout(0, 1));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        createNorthPanel();
-        createSouthPanel();
-        createEastPanel();
-        createWestPanel();
+        JPanel refreshPanel = new JPanel();
+        refreshPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        refreshBtn = new JButton("Refresh");
+        refreshPanel.setPreferredSize(refreshBtn.getSize());
+        refreshPanel.add(refreshBtn);
+
+        add(refreshPanel);
+
+        masterPaneNorth = createPanel();
+        masterPaneEast = createPanel();
+        masterPaneSouth = createPanel();
+        masterPaneWest = createPanel();
 
         JScrollPane scrollPaneNorth = new JScrollPane(masterPaneNorth);
         JScrollPane scrollPaneSouth = new JScrollPane(masterPaneSouth);
@@ -67,120 +73,67 @@ class StatusPanel extends JPanel {
         add(scrollPaneWest);
     }
 
-    private void createNorthPanel() {
-        masterPaneNorth = new JPanel();
-        masterPaneNorth.setLayout(new BoxLayout(masterPaneNorth, BoxLayout.Y_AXIS));
+    private JPanel createPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JPanel northGroupPanel = new JPanel();
-        groupNorth = new JLabel();
-        northStatus = new JLabel();
-        northGroupBtn = new JButton();
-        northGroupPanel.add(groupNorth);
-        northGroupPanel.add(northStatus);
-        northGroupPanel.add(northGroupBtn);
+        JLabel groupDirection = new JLabel("direction");
+        JLabel groupStatus = new JLabel("status");
+        JButton groupBtn = new JButton("satusChange");
+        northGroupPanel.add(groupDirection);
+        northGroupPanel.add(groupStatus);
+        northGroupPanel.add(groupBtn);
 
-        masterPaneNorth.add(northGroupPanel);
-    }
-
-    private void createSouthPanel() {
-        masterPaneSouth = new JPanel();
-        masterPaneSouth.setLayout(new BoxLayout(masterPaneSouth, BoxLayout.Y_AXIS));
-
-        JPanel southGroupPanel = new JPanel();
-        groupSouth = new JLabel();
-        southStatus = new JLabel();
-        southGroupBtn = new JButton();
-        southGroupPanel.add(groupSouth);
-        southGroupPanel.add(southStatus);
-        southGroupPanel.add(southGroupBtn);
-
-        masterPaneSouth.add(southGroupPanel);
-    }
-
-    private void createEastPanel() {
-        masterPaneEast = new JPanel();
-        masterPaneEast.setLayout(new BoxLayout(masterPaneEast, BoxLayout.Y_AXIS));
-
-        JPanel eastGroupPanel = new JPanel();
-        groupEast = new JLabel();
-        eastStatus = new JLabel();
-        eastGroupBtn = new JButton();
-        eastGroupPanel.add(groupEast);
-        eastGroupPanel.add(eastStatus);
-        eastGroupPanel.add(eastGroupBtn);
-
-        masterPaneEast.add(eastGroupPanel);
-    }
-
-    private void createWestPanel() {
-        masterPaneWest = new JPanel();
-        masterPaneWest.setLayout(new BoxLayout(masterPaneWest, BoxLayout.Y_AXIS));
-
-        JPanel westGroupPanel = new JPanel();
-        groupWest = new JLabel();
-        westStatus = new JLabel();
-        westGroupBtn = new JButton();
-        westGroupPanel.add(groupWest);
-        westGroupPanel.add(eastStatus);
-        westGroupPanel.add(eastGroupBtn);
-
-        masterPaneWest.add(westGroupPanel);
+        panel.add(northGroupPanel);
+        return panel;
     }
 
     public void showGroupStatus(Map<String, Boolean> groupStatusMap) {
         for (Map.Entry<String, Boolean> entry : groupStatusMap.entrySet()) {
+            JPanel masterPanel = getPanelBasedOnName(entry.getKey());
             switch (entry.getKey()) {
                 case "NORTH":
-                    groupNorth.setText("North Group");
-                    northStatus.setText(entry.getValue() ? "ON" : "OFF");
-                    northGroupBtn.setText(entry.getValue() ? "DISABLE" : "ENABLE");
+                    ((JLabel)masterPanel.getComponent(0)).setText("North Group");
                     break;
                 case "SOUTH":
-                    groupSouth.setText("South Group");
-                    southStatus.setText(entry.getValue() ? "ON" : "OFF");
-                    southGroupBtn.setText(entry.getValue() ? "DISABLE" : "ENABLE");
+                    ((JLabel)masterPanel.getComponent(0)).setText("South Group");
                     break;
                 case "EAST":
-                    groupEast.setText("East Group");
-                    eastStatus.setText(entry.getValue() ? "ON" : "OFF");
-                    eastGroupBtn.setText(entry.getValue() ? "DISABLE" : "ENABLE");
+                    ((JLabel)masterPanel.getComponent(0)).setText("East Group");
                     break;
                 case "WEST":
-                    groupWest.setText("West Group");
-                    westStatus.setText(entry.getValue() ? "ON" : "OFF");
-                    westGroupBtn.setText(entry.getValue() ? "DISABLE" : "ENABLE");
+                    ((JLabel)masterPanel.getComponent(0)).setText("West Group");
                     break;
                 default:
                     System.out.println("No matching group names");
             }
+            ((JLabel)masterPanel.getComponent(1)).setText(entry.getValue() ? "ON" : "OFF");
+            ((JButton)masterPanel.getComponent(2)).setText(entry.getValue() ? "DISABLE" : "ENABLE");
         }
     }
 
-    public void showNorthIndividualStatus(Map<String, Boolean[]> northEachStatus) {
+    public JPanel getPanelBasedOnName(String name) {
+        switch (name) {
+            case "NORTH":
+                return masterPaneNorth;
+            case "SOUTH":
+                return masterPaneSouth;
+            case "EAST":
+                return masterPaneEast;
+            case "WEST":
+                return masterPaneWest;
+            default:
+                System.out.println("No matching group names");
+                return new JPanel();
+        }
+    }
+
+    public void showIndividualStatus(String groupName, Map<String, Boolean[]> northEachStatus) {
+        JPanel panel = getPanelBasedOnName(groupName);
         for (Map.Entry<String, Boolean[]> entry : northEachStatus.entrySet()) {
             JPanel individualPanel = createIndividualPanel(entry.getKey(), entry.getValue());
-            masterPaneNorth.add(individualPanel);
-        }
-    }
-
-    public void showSouthIndividualStatus(Map<String, Boolean[]> southEachStatus) {
-        for (Map.Entry<String, Boolean[]> entry : southEachStatus.entrySet()) {
-            JPanel individualPanel = createIndividualPanel(entry.getKey(), entry.getValue());
-            masterPaneSouth.add(individualPanel);
-        }
-    }
-
-    public void showEastIndividualStatus(Map<String, Boolean[]> eastEachStatus) {
-        for (Map.Entry<String, Boolean[]> entry : eastEachStatus.entrySet()) {
-            JPanel individualPanel = createIndividualPanel(entry.getKey(), entry.getValue());
-            masterPaneEast.add(individualPanel);
-        }
-    }
-
-    public void showWestIndividualStatus(Map<String, Boolean[]> westEachStatus) {
-        for (Map.Entry<String, Boolean[]> entry : westEachStatus.entrySet()) {
-            JPanel individualPanel = createIndividualPanel(entry.getKey(), entry.getValue());
-            masterPaneWest.add(individualPanel);
+            panel.add(individualPanel);
         }
     }
 
@@ -188,18 +141,19 @@ class StatusPanel extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
 
-        JLabel sprinklerName = new JLabel("" + sprinklerID);
+        JLabel sprinklerName = new JLabel("ID");
+        sprinklerName.setText("" + sprinklerID);
         sprinklerName.setFont(fontSmall);
 
-        JLabel sprinklerCurrentlyOn = new JLabel();
+        JLabel sprinklerCurrentlyOn = new JLabel("ON?NOTON");
         sprinklerCurrentlyOn.setText(sprinklerStatusMap[0] ? "ON" : "NOT ON");
         sprinklerCurrentlyOn.setFont(fontSmall);
 
-        JLabel sprinklerFunctional = new JLabel();
+        JLabel sprinklerFunctional = new JLabel("FUNCTIONAL");
         sprinklerFunctional.setText(sprinklerStatusMap[1] ? "FUNCTIONING OK" : "FUNCTIONING NOT OK");
         sprinklerFunctional.setFont(fontSmall);
 
-        JButton sprinklerStatusChange = new JButton();
+        JButton sprinklerStatusChange = new JButton("StatusChange");
         sprinklerStatusChange.setText(sprinklerStatusMap[0] ? "DISABLE" : "ENABLE");
         sprinklerStatusChange.setFont(fontSmall);
 
@@ -210,125 +164,16 @@ class StatusPanel extends JPanel {
         return panel;
     }
 
-//    private JScrollPane showSprinklerPanel() {
-//        tree = createTree();
-//        Icon imageIcon = new ImageIcon("ui/sprinkler.png");
-//        DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
-//        renderer.setLeafIcon(imageIcon);
-//        tree.setCellRenderer(renderer);
-//
-//        JScrollPane scrollPane = new JScrollPane(tree);
-//        scrollPane.setPreferredSize(new Dimension(200, 200));
-//        return scrollPane;
-//    }
-//
-//    private JTree createTree() {
-//        Font font = new Font("Georgia", Font.BOLD, 18);
-//
-//        DefaultMutableTreeNode root = new DefaultMutableTreeNode("All");
-//
-//        DefaultMutableTreeNode southGroup = new DefaultMutableTreeNode("South");
-//        southGroup.add(new DefaultMutableTreeNode("1S"));
-//        southGroup.add(new DefaultMutableTreeNode("2S"));
-//        southGroup.add(new DefaultMutableTreeNode("3S"));
-//        southGroup.add(new DefaultMutableTreeNode("4S"));
-//
-//        DefaultMutableTreeNode northGroup = new DefaultMutableTreeNode("North");
-//        northGroup.add(new DefaultMutableTreeNode("1N"));
-//        northGroup.add(new DefaultMutableTreeNode("2N"));
-//        northGroup.add(new DefaultMutableTreeNode("3N"));
-//        northGroup.add(new DefaultMutableTreeNode("4N"));
-//
-//        DefaultMutableTreeNode eastGroup = new DefaultMutableTreeNode("East");
-//        eastGroup.add(new DefaultMutableTreeNode("1E"));
-//        eastGroup.add(new DefaultMutableTreeNode("2E"));
-//        eastGroup.add(new DefaultMutableTreeNode("3E"));
-//        eastGroup.add(new DefaultMutableTreeNode("4E"));
-//
-//        DefaultMutableTreeNode westGroup = new DefaultMutableTreeNode("West");
-//        westGroup.add(new DefaultMutableTreeNode("1W"));
-//        westGroup.add(new DefaultMutableTreeNode("2W"));
-//        westGroup.add(new DefaultMutableTreeNode("3W"));
-//        westGroup.add(new DefaultMutableTreeNode("4W"));
-//
-//        root.add(southGroup);
-//        root.add(northGroup);
-//        root.add(eastGroup);
-//        root.add(westGroup);
-//        JTree jTree = new JTree(root);
-//        jTree.setShowsRootHandles(true);
-//        jTree.setFont(font);
-//        return jTree;
-//    }
-//
-//    private JPanel showStatusPanel() {
-//        Font font = new Font("Georgia", Font.BOLD, 20);
-//
-//        JPanel panel1 = new JPanel();
-//        panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        JLabel head = new JLabel("Sprinkler: ");
-//        head.setFont(font);
-//        sprinklerName = new JLabel("1N");
-//        sprinklerName.setFont(font);
-//        sprinklerName.setForeground(Color.decode("#3e5266"));
-//        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
-//        panel1.add(head);
-//        panel1.add(sprinklerName);
-//
-//        JPanel panel2 = new JPanel();
-//        panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        JLabel statusHead = new JLabel("Status: ");
-//        statusHead.setFont(font);
-//        status = new JLabel("ON");
-//        status.setFont(font);
-//        status.setForeground(Color.decode("#3e5266"));
-//        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
-//        panel2.add(statusHead);
-//        panel2.add(status);
-//
-//        JPanel panel3 = new JPanel();
-//        panel3.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        JLabel funcHead = new JLabel("Functional: ");
-//        funcHead.setFont(font);
-//        function = new JLabel("Functional");
-//        function.setFont(font);
-//        function.setForeground(Color.decode("#3e5266"));
-//        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
-//        panel3.add(funcHead);
-//        panel3.add(function);
-//
-//        JPanel panel4 = new JPanel();
-//        panel4.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        JButton enableButton = new JButton("ENABLE");
-//        enableButton.setFont(font);
-//        JButton disableButton = new JButton("DISABLE");
-//        disableButton.setFont(font);
-//        panel4.add(enableButton);
-//        panel4.add(disableButton);
-//
-//        JPanel masterPanel = new JPanel();
-//        masterPanel.setLayout(new BoxLayout(masterPanel, BoxLayout.Y_AXIS));
-//        masterPanel.add(panel1);
-//        masterPanel.add(panel2);
-//        masterPanel.add(panel3);
-//        masterPanel.add(panel4);
-//
-//        return masterPanel;
-//    }
+    public void addIndividualStatusListener(String groupName, ActionListener listener) {
+        JPanel panel = (JPanel)getPanelBasedOnName(groupName).getComponent(1);
 
-    public void setSprinklerList(List<Sprinkler> sprinklerList) {
-
+        for (int i = 0; i < panel.getComponentCount(); i++) {
+            JPanel individualPanel = (JPanel)panel.getComponent(i);
+            ((JButton)individualPanel.getComponent(3)).addActionListener(listener);
+        }
     }
-
-//    public String getSprinklerID() {
-//
-//    }
-
-    public void setSprinklerStatus(boolean sprinklerStatus) {
-
-    }
-
-    public void addSprinklerStatusListener(ActionListener listener) {
-
+    public void addGroupStatusListener(String groupName, ActionListener listener) {
+        JPanel panel = (JPanel)getPanelBasedOnName(groupName).getComponent(0);
+        ((JButton)panel.getComponent(2)).addActionListener(listener);
     }
 }
