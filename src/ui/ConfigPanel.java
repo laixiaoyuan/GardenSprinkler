@@ -175,26 +175,7 @@ class ConfigPanel extends JPanel {
         }
     }
 
-    public Integer transferScheduleDayFromStringToInt (String day) {
-        switch (day) {
-            case "Sunday":
-                return 1;
-            case "Monday":
-                return 2;
-            case "Tuesday":
-                return 3;
-            case "Wednesday":
-                return 4;
-            case "Thursday":
-                return 5;
-            case "Friday":
-                return 6;
-            case "Saturday":
-                return 7;
-            default:
-                return null;
-        }
-    }
+
 
     private JPanel createAddSchedulePanel() {
 
@@ -315,26 +296,6 @@ class ConfigPanel extends JPanel {
         comboBox.setFont(fontSmall);
         comboBox.setEditable(false);
         return comboBox;
-    }
-
-
-    public Schedule getAddedScheduleConfig() {
-        JPanel addPanel = getPanelBasedOnName("ADD");
-        String groupName = ((JComboBox)addPanel.getComponent(1)).getSelectedItem().toString();
-        int day = transferScheduleDayFromStringToInt(((JComboBox)addPanel.getComponent(4)).getSelectedItem().toString());
-        int startHour = Integer.parseInt(((JComboBox)addPanel.getComponent(7)).getSelectedItem().toString());
-        int startMin = Integer.parseInt(((JComboBox)addPanel.getComponent(9)).getSelectedItem().toString());
-        int endHour = Integer.parseInt(((JComboBox)addPanel.getComponent(11)).getSelectedItem().toString());
-        int endMin = Integer.parseInt(((JComboBox)addPanel.getComponent(13)).getSelectedItem().toString());
-
-        // create a Schedule object
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String scheduleID = "" + timestamp.getTime();
-        Schedule schedule = new Schedule(scheduleID, day, startHour, startMin, endHour, endMin);
-
-//        List<Schedule> schedulesList = getLocalScheduleList(groupName);
-//        schedulesList.add(schedule);
-        return schedule;
     }
 
     public void addUpdateTempConfigListener(String panelName, ActionListener listener) {

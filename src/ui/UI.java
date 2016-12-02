@@ -1,16 +1,18 @@
 package ui;
 
+import system.Schedule;
 import system.SprinklerSystem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 
 /**
  * Created by Lexie on 11/17/16.
  */
-public class UI extends JFrame{
+public class UI extends JFrame {
 
     int height;
     int width;
@@ -62,24 +64,33 @@ public class UI extends JFrame{
         mySystem = new SprinklerSystem();
 
     }
+
     public void initialize() {
         overviewPanel.showSysStatus(mySystem.getSysStatus());
         overviewPanel.showSysTempValue(mySystem.getSysTemp());
         overviewPanel.addSysStatusListener(new SysStatusListener());
         overviewPanel.addSysTempChangeListener(new SysTempListener());
-        // add action listener
 
+        statusPanel.addRefreshListener(new RefreshStatusListener());
         statusPanel.showGroupStatus(mySystem.getGroupStatus());
         statusPanel.showIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
         statusPanel.showIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
         statusPanel.showIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
         statusPanel.showIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
-        // add action listener
+        statusPanel.addGroupStatusListener(northGroup, new GroupStatusListener());
+        statusPanel.addGroupStatusListener(southGroup, new GroupStatusListener());
+        statusPanel.addGroupStatusListener(eastGroup, new GroupStatusListener());
+        statusPanel.addGroupStatusListener(westGroup, new GroupStatusListener());
+        statusPanel.addIndividualStatusListener(northGroup, new IndividualStatusListener());
+        statusPanel.addIndividualStatusListener(southGroup, new IndividualStatusListener());
+        statusPanel.addIndividualStatusListener(eastGroup, new IndividualStatusListener());
+        statusPanel.addIndividualStatusListener(westGroup, new IndividualStatusListener());
 
         configPanel.createEachScheduleShowPanel(northGroup, mySystem.getSchedule(northGroup));
         configPanel.createEachScheduleShowPanel(southGroup, mySystem.getSchedule(southGroup));
         configPanel.createEachScheduleShowPanel(eastGroup, mySystem.getSchedule(eastGroup));
         configPanel.createEachScheduleShowPanel(westGroup, mySystem.getSchedule(westGroup));
+        configPanel.addAddConfigListener(new AddConfigListener());
         // add action listener
 
 
@@ -92,38 +103,17 @@ public class UI extends JFrame{
 
     }
 
-//    class AddConfigListener implements ActionListener {
-//
-//    }
-
-//    public JPanel getOverviewPanel() {
-//        return overviewPanel;
-//    }
-//
-//    public JPanel getStatusPanel() {
-//        return statusPanel;
-//    }
-//
-//    public JPanel getConfigPanel() {
-//        return configPanel;
-//    }
-//
-//    public JPanel getConsumPanel() {
-//        return consumPanel;
-//    }
-
     class SysStatusListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            JButton btn = (JButton)e.getSource();
+            JButton btn = (JButton) e.getSource();
             String status = btn.getText();
             if (status.equals("TURN OFF")) {
-                ((JLabel)btn.getParent().getComponent(1)).setText("OFF");
+                ((JLabel) btn.getParent().getComponent(1)).setText("OFF");
                 btn.setText("TURN ON");
                 mySystem.setSysStatus(false);
-            }
-            else {
-                ((JLabel)btn.getParent().getComponent(1)).setText("ON");
+            } else {
+                ((JLabel) btn.getParent().getComponent(1)).setText("ON");
                 btn.setText("TURN OFF");
                 mySystem.setSysStatus(true);
             }
@@ -133,14 +123,13 @@ public class UI extends JFrame{
     class SysTempListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            JButton btn = (JButton)e.getSource();
-            JLabel tempDisplay = (JLabel)btn.getParent().getComponent(1);
+            JButton btn = (JButton) e.getSource();
+            JLabel tempDisplay = (JLabel) btn.getParent().getComponent(1);
             int curTemp = Integer.valueOf(tempDisplay.getText());
             String btnString = btn.getText();
             if (btnString.equals("+")) {
                 curTemp++;
-            }
-            else {
+            } else {
                 curTemp--;
             }
             tempDisplay.setText("" + curTemp);
@@ -148,11 +137,94 @@ public class UI extends JFrame{
         }
     }
 
+    class RefreshStatusListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            statusPanel.showGroupStatus(mySystem.getGroupStatus());
+            statusPanel.showIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
+            statusPanel.showIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
+            statusPanel.showIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
+            statusPanel.showIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+        }
+    }
 
+    class GroupStatusListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton btn = (JButton) e.getSource();
+            String status = btn.getText();
+            String groupName = btn.getName();
+            if (status.equals("ENABLE")) {
+                ((JLabel) btn.getParent().getComponent(1)).setText("ON");
+                btn.setText("DISABLE");
+                mySystem.setGroupStatus(groupName, true);
+            } else {
+                ((JLabel) btn.getParent().getComponent(1)).setText("OFF");
+                btn.setText("ENABLE");
+                mySystem.setGroupStatus(groupName, false);
+            }
+        }
+    }
 
+    class IndividualStatusListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton btn = (JButton) e.getSource();
+            String status = btn.getText();
+            String sprinklerID = btn.getName();
+            if (status.equals("ENABLE")) {
+                ((JLabel) btn.getParent().getComponent(1)).setText("ON");
+                btn.setText("DISABLE");
+                mySystem.setSprinklerStatus(sprinklerID, true);
+            } else {
+                ((JLabel) btn.getParent().getComponent(1)).setText("OFF");
+                btn.setText("ENABLE");
+                mySystem.setSprinklerStatus(sprinklerID, false);
+            }
+        }
+    }
+
+    class AddConfigListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton btn = (JButton) e.getSource();
+            JPanel addPanel = (JPanel)btn.getParent();
+            String groupName = ((JComboBox)addPanel.getComponent(1)).getSelectedItem().toString();
+            int day = transferScheduleDayFromStringToInt(((JComboBox)addPanel.getComponent(4)).getSelectedItem().toString());
+            int startHour = Integer.parseInt(((JComboBox)addPanel.getComponent(7)).getSelectedItem().toString());
+            int startMin = Integer.parseInt(((JComboBox)addPanel.getComponent(9)).getSelectedItem().toString());
+            int endHour = Integer.parseInt(((JComboBox)addPanel.getComponent(11)).getSelectedItem().toString());
+            int endMin = Integer.parseInt(((JComboBox)addPanel.getComponent(13)).getSelectedItem().toString());
+
+            mySystem.addSchedule(groupName, day, startHour, startMin, endHour, endMin);
+            JOptionPane.showMessageDialog(null, "New schedule added");
+        }
+    }
+
+    private Integer transferScheduleDayFromStringToInt (String day) {
+        switch (day) {
+            case "Sunday":
+                return 1;
+            case "Monday":
+                return 2;
+            case "Tuesday":
+                return 3;
+            case "Wednesday":
+                return 4;
+            case "Thursday":
+                return 5;
+            case "Friday":
+                return 6;
+            case "Saturday":
+                return 7;
+            default:
+                return null;
+        }
+    }
 
     public static void main(String[] args) {
         new UI().initialize();
     }
+
 
 }

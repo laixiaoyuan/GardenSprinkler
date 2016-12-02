@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.TimerTask;
 
-import data.FileIO;
+import data.DataFile;
 
 public class SprinklerTask extends TimerTask {
 	
@@ -28,7 +28,7 @@ public class SprinklerTask extends TimerTask {
 			e.printStackTrace();
 		}
 		group.setDisableGroup();
-		FileIO f = new FileIO();
+		DataFile f = new DataFile();
 		try {
 			f.writeData(group.getName(), new Date(), 
 					(int)(group.getSprinklerList().size() * group.getWaterVolume()* duration / 1000));

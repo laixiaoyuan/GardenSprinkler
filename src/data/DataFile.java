@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class FileIO {
+public class DataFile {
 	
 	private int[] sysWC;
 	private int[] gNorthWC;
@@ -24,7 +24,7 @@ public class FileIO {
 	private final static String defaultFileName = "WaterConsumption.txt";
 	private final static int numOfData = 10;
 	
-	public FileIO(){
+	public DataFile(){
 		sysWC = new int[numOfData];
 		gNorthWC = new int[numOfData];
 		gSouthWC = new int[numOfData];

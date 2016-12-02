@@ -74,15 +74,19 @@ class StatusPanel extends JPanel {
             switch (entry.getKey()) {
                 case "NORTH":
                     ((JLabel)parentPanel.getComponent(0)).setText("North Group");
+                    ((JButton)parentPanel.getComponent(2)).setName("NORTH");
                     break;
                 case "SOUTH":
                     ((JLabel)parentPanel.getComponent(0)).setText("South Group");
+                    ((JButton)parentPanel.getComponent(2)).setName("NORTH");
                     break;
                 case "EAST":
                     ((JLabel)parentPanel.getComponent(0)).setText("East Group");
+                    ((JButton)parentPanel.getComponent(2)).setName("NORTH");
                     break;
                 case "WEST":
                     ((JLabel)parentPanel.getComponent(0)).setText("West Group");
+                    ((JButton)parentPanel.getComponent(2)).setName("NORTH");
                     break;
                 default:
                     System.out.println("No matching group names");
@@ -134,6 +138,7 @@ class StatusPanel extends JPanel {
 
         JButton sprinklerStatusChange = new JButton();
         sprinklerStatusChange.setText(sprinklerStatusMap[0] ? "DISABLE" : "ENABLE");
+        sprinklerStatusChange.setName(sprinklerID);
         sprinklerStatusChange.setFont(fontSmall);
 
         panel.add(sprinklerName);
@@ -144,15 +149,19 @@ class StatusPanel extends JPanel {
     }
 
     public void addIndividualStatusListener(String groupName, ActionListener listener) {
-        JPanel panel = (JPanel)getPanelBasedOnName(groupName).getComponent(1);
+        JPanel panel = getPanelBasedOnName(groupName);
 
-        for (int i = 0; i < panel.getComponentCount(); i++) {
-            JPanel individualPanel = (JPanel)panel.getComponent(i);
+        for (int i = 1; i < panel.getComponentCount(); i++) {
+            JPanel individualPanel = (JPanel)getPanelBasedOnName(groupName).getComponent(i);
             ((JButton)individualPanel.getComponent(3)).addActionListener(listener);
         }
     }
     public void addGroupStatusListener(String groupName, ActionListener listener) {
         JPanel panel = (JPanel)getPanelBasedOnName(groupName).getComponent(0);
         ((JButton)panel.getComponent(2)).addActionListener(listener);
+    }
+
+    public void addRefreshListener(ActionListener listener) {
+        refreshBtn.addActionListener(listener);
     }
 }
