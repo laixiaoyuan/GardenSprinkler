@@ -140,12 +140,31 @@ public class UI extends JFrame {
     class RefreshStatusListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+//            int size = statusPanel.getComponentCount();
+//            System.out.println("Size: " + size);
+//            for (int i = size - 1; i >= 0; i--) {
+//                System.out.println("size: " + statusPanel.getComponentCount());
+//                statusPanel.remove(statusPanel.getComponent(0));
+//            }
+            JPanel parent = (JPanel)statusPanel.getParent();
+            parent.revalidate();
+            parent.repaint();
+////            resetStatusPanel();
+            statusPanel = resetStatusPanel();
             statusPanel.showGroupStatus(mySystem.getGroupStatus());
             statusPanel.showIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
             statusPanel.showIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
             statusPanel.showIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
             statusPanel.showIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+            statusPanel.revalidate();
+            statusPanel.repaint();
+
         }
+    }
+
+    private StatusPanel resetStatusPanel() {
+        StatusPanel newStatusPanel = new StatusPanel();
+        return newStatusPanel;
     }
 
     class GroupStatusListener implements ActionListener {
@@ -159,7 +178,7 @@ public class UI extends JFrame {
                 btn.setText("DISABLE");
                 mySystem.setGroupStatus(groupName, true);
             } else {
-                ((JLabel) btn.getParent().getComponent(1)).setText("OFF");
+                ((JLabel) btn.getParent().getComponent(1)).setText("NOT ON");
                 btn.setText("ENABLE");
                 mySystem.setGroupStatus(groupName, false);
             }
@@ -177,7 +196,7 @@ public class UI extends JFrame {
                 btn.setText("DISABLE");
                 mySystem.setSprinklerStatus(sprinklerID, true);
             } else {
-                ((JLabel) btn.getParent().getComponent(1)).setText("OFF");
+                ((JLabel) btn.getParent().getComponent(1)).setText("NOT ON");
                 btn.setText("ENABLE");
                 mySystem.setSprinklerStatus(sprinklerID, false);
             }
