@@ -27,7 +27,7 @@ class StatusPanel extends JPanel {
         super();
         setLayout(new BorderLayout());
 
-        JPanel refreshPanel = new JPanel();
+        JPanel refreshPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         refreshBtn = new JButton("Refresh");
         refreshBtn.setFont(fontSmall);
         refreshPanel.add(refreshBtn);
@@ -51,7 +51,13 @@ class StatusPanel extends JPanel {
         masterPaneGroup.add(scrollPaneEast);
         masterPaneGroup.add(scrollPaneWest);
 
+        JPanel notePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel note = new JLabel("*You can not change status of those sprinklers that are not working");
+        note.setFont(fontTiny);
+        notePanel.add(note);
+
         add(masterPaneGroup, BorderLayout.CENTER);
+        add(notePanel, BorderLayout.SOUTH);
     }
 
     public void updateStatus() {
@@ -116,7 +122,7 @@ class StatusPanel extends JPanel {
                 default:
                     System.out.println("No matching group names");
             }
-            ((JLabel)parentPanel.getComponent(1)).setText(entry.getValue() ? "ON" : "NOT ON");
+            ((JLabel)parentPanel.getComponent(1)).setText(entry.getValue() ? "ON" : "NOTON");
             ((JButton)parentPanel.getComponent(2)).setText(entry.getValue() ? "DISABLE" : "ENABLE");
         }
     }
@@ -160,11 +166,11 @@ class StatusPanel extends JPanel {
             sprinklerName.setFont(fontSmall);
 
             JLabel sprinklerCurrentlyOn = (JLabel) individualPanel.getComponent(1);
-            sprinklerCurrentlyOn.setText(sprinklerStatusMap[0] ? "ON" : "NOT ON");
+            sprinklerCurrentlyOn.setText(sprinklerStatusMap[0] ? "ON" : "NOTON");
             sprinklerCurrentlyOn.setFont(fontSmall);
 
             JLabel sprinklerFunctional = (JLabel) individualPanel.getComponent(2);
-            sprinklerFunctional.setText(sprinklerStatusMap[1] ? "OK" : "NOT OK");
+            sprinklerFunctional.setText(sprinklerStatusMap[1] ? "OK" : "NOTOK*");
             sprinklerFunctional.setFont(fontSmall);
 
             JButton sprinklerStatusChange = (JButton) individualPanel.getComponent(3);
@@ -183,11 +189,11 @@ class StatusPanel extends JPanel {
         sprinklerName.setFont(fontSmall);
 
         JLabel sprinklerCurrentlyOn = new JLabel();
-        sprinklerCurrentlyOn.setText(sprinklerStatusMap[0] ? "ON" : "NOT ON");
+        sprinklerCurrentlyOn.setText(sprinklerStatusMap[0] ? "ON" : "NOTON");
         sprinklerCurrentlyOn.setFont(fontSmall);
 
         JLabel sprinklerFunctional = new JLabel();
-        sprinklerFunctional.setText(sprinklerStatusMap[1] ? "OK" : "NOT OK");
+        sprinklerFunctional.setText(sprinklerStatusMap[1] ? "OK" : "NOTOK*");
         sprinklerFunctional.setFont(fontSmall);
 
         JButton sprinklerStatusChange = new JButton();

@@ -4,6 +4,8 @@ import system.Schedule;
 import system.SprinklerSystem;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,6 +57,8 @@ public class UI extends JFrame {
         tabbedPane.addTab("Water Consumption", consumPanel);
         tabbedPane.addTab("Map", mapPanel);
 
+        tabbedPane.addChangeListener(changeListener);
+        
         contentPane = this.getContentPane();
         contentPane.add(tabbedPane);
         setSize(width, height);
@@ -67,6 +71,20 @@ public class UI extends JFrame {
         mySystem = new SprinklerSystem();
 
     }
+
+    private ChangeListener changeListener = new ChangeListener() {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            JTabbedPane tabbedPane = (JTabbedPane)e.getSource();
+            if (tabbedPane.getSelectedIndex() == 1) {
+                statusPanel.showGroupStatus(mySystem.getGroupStatus());
+                statusPanel.updateIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
+                statusPanel.updateIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
+                statusPanel.updateIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
+                statusPanel.updateIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+            }
+        }
+    };
 
     public void initialize() {
         overviewPanel.showSysStatus(mySystem.getSysStatus());
