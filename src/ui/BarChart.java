@@ -40,7 +40,6 @@ class BarChart extends JPanel {
 
         int width = (getWidth() / bars.size()) - 100;
         int x = 20;
-        System.out.print(getHeight());
 
         for (int i = 0; i < bars.size(); i++) {
             int value = bars.get(i);

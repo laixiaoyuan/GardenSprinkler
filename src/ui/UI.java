@@ -32,11 +32,14 @@ public class UI extends JFrame {
 
     SprinklerSystem mySystem;
 
+    private int statusTabIndex;
+    private boolean statusPanelIsVisible;
+
 
     public UI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        height = screenSize.height;
-        width = screenSize.width;
+        height = screenSize.height / 2;
+        width = screenSize.width * 3 / 5;
 
         tabbedPane = new JTabbedPane();
         overviewPanel = new OverviewPanel();
@@ -45,12 +48,14 @@ public class UI extends JFrame {
         consumPanel = new ConsumPanel();
         mapPanel = new MapPanel();
 
-        tabbedPane.setFont(new Font("Georgia", Font.PLAIN, 24));
+        tabbedPane.setFont(new Font("Georgia", Font.PLAIN, 20));
         tabbedPane.addTab("Overview", overviewPanel);
         tabbedPane.addTab("Status", statusPanel);
         tabbedPane.addTab("Configuration", configPanel);
         tabbedPane.addTab("Water Consumption", consumPanel);
         tabbedPane.addTab("Map", mapPanel);
+
+
 
         contentPane = this.getContentPane();
         contentPane.add(tabbedPane);
@@ -73,14 +78,17 @@ public class UI extends JFrame {
 
         statusPanel.addRefreshListener(new RefreshStatusListener());
         statusPanel.showGroupStatus(mySystem.getGroupStatus());
-        statusPanel.showIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
-        statusPanel.showIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
-        statusPanel.showIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
-        statusPanel.showIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+
+        statusPanel.createIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
+        statusPanel.createIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
+        statusPanel.createIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
+        statusPanel.createIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+
         statusPanel.addGroupStatusListener(northGroup, new GroupStatusListener());
         statusPanel.addGroupStatusListener(southGroup, new GroupStatusListener());
         statusPanel.addGroupStatusListener(eastGroup, new GroupStatusListener());
         statusPanel.addGroupStatusListener(westGroup, new GroupStatusListener());
+
         statusPanel.addIndividualStatusListener(northGroup, new IndividualStatusListener());
         statusPanel.addIndividualStatusListener(southGroup, new IndividualStatusListener());
         statusPanel.addIndividualStatusListener(eastGroup, new IndividualStatusListener());
@@ -90,6 +98,7 @@ public class UI extends JFrame {
         configPanel.createEachScheduleShowPanel(southGroup, mySystem.getSchedule(southGroup));
         configPanel.createEachScheduleShowPanel(eastGroup, mySystem.getSchedule(eastGroup));
         configPanel.createEachScheduleShowPanel(westGroup, mySystem.getSchedule(westGroup));
+
         configPanel.addAddConfigListener(new AddConfigListener());
         // add action listener
 
@@ -140,31 +149,15 @@ public class UI extends JFrame {
     class RefreshStatusListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-//            int size = statusPanel.getComponentCount();
-//            System.out.println("Size: " + size);
-//            for (int i = size - 1; i >= 0; i--) {
-//                System.out.println("size: " + statusPanel.getComponentCount());
-//                statusPanel.remove(statusPanel.getComponent(0));
-//            }
-            JPanel parent = (JPanel)statusPanel.getParent();
-            parent.revalidate();
-            parent.repaint();
-////            resetStatusPanel();
-            statusPanel = resetStatusPanel();
+
             statusPanel.showGroupStatus(mySystem.getGroupStatus());
-            statusPanel.showIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
-            statusPanel.showIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
-            statusPanel.showIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
-            statusPanel.showIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
-            statusPanel.revalidate();
-            statusPanel.repaint();
+
+            statusPanel.updateIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
+            statusPanel.updateIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
+            statusPanel.updateIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
+            statusPanel.updateIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
 
         }
-    }
-
-    private StatusPanel resetStatusPanel() {
-        StatusPanel newStatusPanel = new StatusPanel();
-        return newStatusPanel;
     }
 
     class GroupStatusListener implements ActionListener {
@@ -182,6 +175,7 @@ public class UI extends JFrame {
                 btn.setText("ENABLE");
                 mySystem.setGroupStatus(groupName, false);
             }
+
         }
     }
 

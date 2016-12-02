@@ -23,8 +23,9 @@ class OverviewPanel extends JPanel{
     private JButton higherTemp;
     private JButton lowerTemp;
 
-    Font fontBig = new Font("Georgia", Font.BOLD, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
+    Font fontTiny = new Font("Georgia", Font.PLAIN, 14);
+
 
     public OverviewPanel() {
         super();
@@ -62,7 +63,7 @@ class OverviewPanel extends JPanel{
 
         TitledBorder border = new TitledBorder(new EtchedBorder(), "Status");
         panel.setBorder(border);
-        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontBig);
+        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontTiny);
 
         return panel;
     }
@@ -90,7 +91,7 @@ class OverviewPanel extends JPanel{
         panel.add(higherTemp);
         panel.add(lowerTemp);
         panel.setBorder(new TitledBorder(new EtchedBorder(), "Temperature"));
-        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontBig);
+        ((javax.swing.border.TitledBorder) panel.getBorder()).setTitleFont(fontTiny);
 
         return panel;
     }
