@@ -68,11 +68,13 @@ class ConfigPanel extends JPanel {
         JLabel upperHead = new JLabel("Upper");
         upperHead.setFont(fontSmall);
         JComboBox upperLimit = createTempLimitCombo();
+        upperLimit.setSelectedIndex(10);
         JLabel tempUnit1 = new JLabel("℉");
         tempUnit1.setFont(fontSmall);
         JLabel lowerHead = new JLabel("   Lower");
         lowerHead.setFont(fontSmall);
         JComboBox lowerLimit = createTempLimitCombo();
+        lowerLimit.setSelectedIndex(4);
         JLabel tempUnit2 = new JLabel("℉");
         tempUnit2.setFont(fontSmall);
 
@@ -348,5 +350,10 @@ class ConfigPanel extends JPanel {
             ((JButton)individualPanel.getComponent(2)).addActionListener(listener);
         }
     }
+
+    public String showOriginTempUpperLimit(int temp) {
+        return "" + temp;
+    }
+
 
 }

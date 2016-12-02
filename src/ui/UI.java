@@ -81,11 +81,15 @@ public class UI extends JFrame {
                 statusPanel.updateIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
                 statusPanel.updateIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
                 statusPanel.updateIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+                statusPanel.validate();
+                statusPanel.repaint();
             }
             else if (tabbedPane.getSelectedIndex() == 3) {
                 int[] sysWCArray = mySystem.getSysWCData();
                 consumPanel.createBarChartByGroup("SYSTEM", sysWCArray);
                 ((CardLayout)((JPanel)consumPanel.getComponent(1)).getLayout()).show((JPanel)consumPanel.getComponent(1), "SYSTEM");
+                consumPanel.validate();
+                consumPanel.repaint();
             }
         }
     };
@@ -118,6 +122,7 @@ public class UI extends JFrame {
         configPanel.createEachScheduleShowPanel(southGroup, mySystem.getSchedule(southGroup));
         configPanel.createEachScheduleShowPanel(eastGroup, mySystem.getSchedule(eastGroup));
         configPanel.createEachScheduleShowPanel(westGroup, mySystem.getSchedule(westGroup));
+        configPanel.showOriginTempUpperLimit(mySystem.getMaxTemp());
 
         configPanel.addAddConfigListener(new AddConfigListener());
         configPanel.addRefreshScheduleListener(northGroup, new RefreshScheduleListener());
@@ -191,6 +196,8 @@ public class UI extends JFrame {
             statusPanel.updateIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
             statusPanel.updateIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
             statusPanel.updateIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+            statusPanel.validate();
+            statusPanel.repaint();
         }
     }
 
@@ -308,8 +315,16 @@ public class UI extends JFrame {
             JButton sysNameBtn = (JButton)e.getSource();
             JPanel sysConsumPanel = consumPanel.getCardPanelByName(sysNameBtn.getName());
             int[] sysWCArray = mySystem.getSysWCData();
+            // for test
+
+
+            // end test
+
             consumPanel.createBarChartByGroup(sysNameBtn.getName(), sysWCArray);
             ((CardLayout)sysConsumPanel.getParent().getLayout()).show(sysConsumPanel.getParent(), sysNameBtn.getName());
+            consumPanel.getComponent(1).validate();
+            consumPanel.getComponent(1).repaint();
+
         }
     }
 
@@ -321,8 +336,8 @@ public class UI extends JFrame {
             int[] groupWCArray = mySystem.getGroupWCData(groupNameBtn.getName());
             consumPanel.createBarChartByGroup(groupNameBtn.getName(), groupWCArray);
             ((CardLayout)groupConsumPanel.getParent().getLayout()).show(groupConsumPanel.getParent(), groupNameBtn.getName());
-
-
+            consumPanel.validate();
+            consumPanel.repaint();
         }
     }
 

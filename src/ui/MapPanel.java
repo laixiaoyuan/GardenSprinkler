@@ -19,8 +19,6 @@ class MapPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(5.0f));
 
-
-
         double startX = 100;
         double startY = 100;
         double width = 45;
@@ -54,14 +52,11 @@ class MapPanel extends JPanel {
             g2d.draw(new Ellipse2D.Double(curX1 + gap, curY2, width, height));
         }
 
-
         double stringStartY = 50;
         String string = "Sprinkler Location";
         g2d.setPaint(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
         g2d.drawString(string, (int)startX, (int)stringStartY);
-
-
     }
 
     public void draw() {
