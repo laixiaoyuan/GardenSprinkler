@@ -144,7 +144,7 @@ public class UI extends JFrame {
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
-        
+
     }
 
     class SysStatusListener implements ActionListener {
@@ -256,6 +256,8 @@ public class UI extends JFrame {
             configPanel.removeGroupScheduleShowPanel(groupName);
             configPanel.createEachScheduleShowPanel(groupName, mySystem.getSchedule(groupName));
             configPanel.addDeleteConfigListener(groupName, new DeleteScheduleListener());
+            configPanel.validate();
+            configPanel.repaint();
 
         }
     }
@@ -323,6 +325,8 @@ public class UI extends JFrame {
 
         }
     }
+
+
 
     class RefreshConsumptionListener implements ActionListener {
         @Override
