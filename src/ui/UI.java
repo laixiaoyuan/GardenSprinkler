@@ -38,8 +38,8 @@ public class UI extends JFrame {
 
     public UI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        height = screenSize.height / 2;
-        width = screenSize.width * 3 / 5;
+        height = screenSize.height * 3 / 4;
+        width = screenSize.width * 3 / 4;
 
         tabbedPane = new JTabbedPane();
         overviewPanel = new OverviewPanel();
@@ -54,8 +54,6 @@ public class UI extends JFrame {
         tabbedPane.addTab("Configuration", configPanel);
         tabbedPane.addTab("Water Consumption", consumPanel);
         tabbedPane.addTab("Map", mapPanel);
-
-
 
         contentPane = this.getContentPane();
         contentPane.add(tabbedPane);
@@ -100,8 +98,19 @@ public class UI extends JFrame {
         configPanel.createEachScheduleShowPanel(westGroup, mySystem.getSchedule(westGroup));
 
         configPanel.addAddConfigListener(new AddConfigListener());
-        // add action listener
-
+        configPanel.addRefreshScheduleListener(northGroup, new RefreshScheduleListener());
+        configPanel.addRefreshScheduleListener(southGroup, new RefreshScheduleListener());
+        configPanel.addRefreshScheduleListener(eastGroup, new RefreshScheduleListener());
+        configPanel.addRefreshScheduleListener(westGroup, new RefreshScheduleListener());
+        configPanel.addSaveWaterVolumeListener(northGroup, new SaveGroupWaterVolumeListener());
+        configPanel.addSaveWaterVolumeListener(southGroup, new SaveGroupWaterVolumeListener());
+        configPanel.addSaveWaterVolumeListener(eastGroup, new SaveGroupWaterVolumeListener());
+        configPanel.addSaveWaterVolumeListener(westGroup, new SaveGroupWaterVolumeListener());
+        configPanel.addDeleteConfigListener(northGroup, new DeleteScheduleListener());
+        configPanel.addDeleteConfigListener(southGroup, new DeleteScheduleListener());
+        configPanel.addDeleteConfigListener(eastGroup, new DeleteScheduleListener());
+        configPanel.addDeleteConfigListener(westGroup, new DeleteScheduleListener());
+        configPanel.addUpdateTempLimitConfigListener(new UpdateTempLimitListener());
 
         consumPanel.createBarChartByGroup("SYSTEM", mySystem.getSysWCData());
         consumPanel.createBarChartByGroup(northGroup, mySystem.getGroupWCData(northGroup));
@@ -156,7 +165,6 @@ public class UI extends JFrame {
             statusPanel.updateIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
             statusPanel.updateIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
             statusPanel.updateIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
-
         }
     }
 
@@ -213,6 +221,59 @@ public class UI extends JFrame {
             JOptionPane.showMessageDialog(null, "New schedule added");
         }
     }
+
+    class RefreshScheduleListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton refreshBtn = (JButton)e.getSource();
+            String groupName = refreshBtn.getParent().getParent().getName();
+            configPanel.removeGroupScheduleShowPanel(groupName);
+            configPanel.createEachScheduleShowPanel(groupName, mySystem.getSchedule(groupName));
+            configPanel.addDeleteConfigListener(groupName, new DeleteScheduleListener());
+
+        }
+    }
+
+    class SaveGroupWaterVolumeListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton saveBtn = (JButton)e.getSource();
+            String groupName = saveBtn.getParent().getParent().getName();
+            int volume = Integer.parseInt(((JComboBox)saveBtn.getParent().getComponent(1)).getSelectedItem().toString());
+            mySystem.setWaterVolume(groupName, volume);
+        }
+    }
+
+    class DeleteScheduleListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton deleteBtn = (JButton)e.getSource();
+            JPanel parentPanel = (JPanel)deleteBtn.getParent();
+//            parentPanel.
+            JPanel masterPanel = (JPanel)parentPanel.getParent();
+            String groupName = parentPanel.getParent().getName();
+            String scheduleID = parentPanel.getComponent(0).getName();
+            mySystem.deleteSchedule(groupName, scheduleID);
+
+            masterPanel.remove(parentPanel);
+            masterPanel.revalidate();
+            masterPanel.repaint();
+        }
+    }
+
+    class UpdateTempLimitListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton updateBtn = (JButton)e.getSource();
+            JPanel parentPanel = (JPanel)updateBtn.getParent();
+            int upperTempLimit = Integer.parseInt(((JComboBox)parentPanel.getComponent(3)).getSelectedItem().toString());
+            int lowerTempLimit = Integer.parseInt(((JComboBox)parentPanel.getComponent(6)).getSelectedItem().toString());
+            mySystem.setMaxTemp(upperTempLimit);
+            mySystem.setMinTemp(lowerTempLimit);
+
+        }
+    }
+
 
     private Integer transferScheduleDayFromStringToInt (String day) {
         switch (day) {

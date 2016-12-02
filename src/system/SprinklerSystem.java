@@ -26,7 +26,7 @@ public class SprinklerSystem {
 	private int sysTemp;
 	private int maxTemp;
 	private int minTemp;
-	private List<Sprinkler> srList;
+	private Map<Sprinkler,SprinklerGroup> srMap;
 	private List<SprinklerGroup> sGroupList;
 	private Map<String,SprinklerGroup> sGroupMap;
 	private DataFile dataFile;
@@ -36,7 +36,7 @@ public class SprinklerSystem {
 		sysTemp = defaultSysTemp;
 		maxTemp = defaultMaxTemp;
 		minTemp = defaultMinTemp;
-		srList = new ArrayList<Sprinkler>();
+		srMap = new HashMap<Sprinkler,SprinklerGroup>();
 		sGroupList = new ArrayList<SprinklerGroup>();
 		sGroupMap = new HashMap<String,SprinklerGroup>();
 		for(int i=0;i<defaultGroupName.length;i++){
@@ -44,10 +44,19 @@ public class SprinklerSystem {
 			SprinklerGroup newGroup = new SprinklerGroup(groupName);
 			newGroup.setWaterVolume(defaultVolume);
 			newGroup.addNewSchedule(defaultSchedDay,defaultStartHour,defaultStartMin,defaultEndHour,defaultEndMin);
-			srList.add(newGroup.addSprinkler());
-			srList.add(newGroup.addSprinkler());
+			newGroup.addSprinkler();
+			newGroup.addSprinkler();
 			sGroupList.add(newGroup);
 			sGroupMap.put(groupName,newGroup);
+		}
+		for(SprinklerGroup group : sGroupList){
+			List<Sprinkler> srList = getSprinklerList(group.getName());
+			for(Sprinkler s : srList){
+				srMap.put(s, group);
+				// make 2 of the sprinklers mal-functional
+				if(s.getID().equals("2N")) s.setFunction(false);
+				if(s.getID().equals("1S")) s.setFunction(false);
+			}
 		}
 		dataFile = new DataFile();
 		dataFile.loadData();
@@ -57,9 +66,24 @@ public class SprinklerSystem {
 		return isOn;
 	}
 
-	public void setSysStatus(boolean isOn){
-		this.isOn=isOn;
+	public void setEnableSystem(){
+		this.isOn = true;
 	}
+
+	// when set disable the system, all sprinkler groups and
+	// individual sprinkler would be turned off
+	public void setDisableSystem(){
+		for(SprinklerGroup group: sGroupList){
+			group.setDisableGroup();
+			System.out.println("All system sprinklers have been turned off.");
+		}
+	}
+
+	public void setSysStatus(boolean isOn){
+		if(isOn) setEnableSystem();
+		else setDisableSystem();
+	}
+
 
 	public int getSysTemp(){
 		return sysTemp;
@@ -96,10 +120,10 @@ public class SprinklerSystem {
 	}
 
 	public void setSprinklerStatus(String sID, boolean stat){
-		for(Sprinkler s:srList){
-			if(s.getID().equals(sID)){
-				if(stat==true) s.setEnable();
-				else s.setDisable();
+		for(Entry<Sprinkler,SprinklerGroup> e : srMap.entrySet()){
+			Sprinkler s = e.getKey();
+			if(s.getID().equals(sID) && e.getValue().status){
+				s.setStatus(stat);
 			}
 		}
 	}
@@ -165,6 +189,14 @@ public class SprinklerSystem {
 							int startHour, int startMin, int endHour, int endMin){
 		SprinklerGroup g = sGroupMap.get(groupName);
 		g.addNewSchedule(day, startHour, startMin, endHour, endMin);
+	}
+
+	public void deleteSchedule(String groupName, String schedID){
+		SprinklerGroup g = sGroupMap.get(groupName);
+		g.deleteSchedule(schedID);
+		if(g.getSchedule().size()==0){
+			g.addNewSchedule(defaultSchedDay, defaultStartHour, defaultStartMin, defaultEndHour, defaultEndMin);
+		}
 	}
 
 	public int[] getSysWCData(){

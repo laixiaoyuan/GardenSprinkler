@@ -25,16 +25,14 @@ class StatusPanel extends JPanel {
 
     public StatusPanel() {
         super();
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout());
 
         JPanel refreshPanel = new JPanel();
-        refreshPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         refreshBtn = new JButton("Refresh");
         refreshBtn.setFont(fontSmall);
-        refreshPanel.setPreferredSize(new Dimension(20, 20));
         refreshPanel.add(refreshBtn);
 
-        add(refreshPanel);
+        add(refreshPanel, BorderLayout.NORTH);
 
         masterPaneNorth = createPanel();
         masterPaneEast = createPanel();
@@ -53,7 +51,7 @@ class StatusPanel extends JPanel {
         masterPaneGroup.add(scrollPaneEast);
         masterPaneGroup.add(scrollPaneWest);
 
-        add(masterPaneGroup);
+        add(masterPaneGroup, BorderLayout.CENTER);
     }
 
     public void updateStatus() {
@@ -196,6 +194,10 @@ class StatusPanel extends JPanel {
         sprinklerStatusChange.setText(sprinklerStatusMap[0] ? "DISABLE" : "ENABLE");
         sprinklerStatusChange.setName(sprinklerID);
         sprinklerStatusChange.setFont(fontSmall);
+        if (!sprinklerStatusMap[1]) {
+            sprinklerStatusChange.setEnabled(false);
+        }
+
 
         panel.add(sprinklerName);
         panel.add(sprinklerCurrentlyOn);
