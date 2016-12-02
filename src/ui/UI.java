@@ -58,7 +58,7 @@ public class UI extends JFrame {
         tabbedPane.addTab("Map", mapPanel);
 
         tabbedPane.addChangeListener(changeListener);
-        
+
         contentPane = this.getContentPane();
         contentPane.add(tabbedPane);
         setSize(width, height);
@@ -69,7 +69,6 @@ public class UI extends JFrame {
         setVisible(true);
 
         mySystem = new SprinklerSystem();
-
     }
 
     private ChangeListener changeListener = new ChangeListener() {
@@ -82,6 +81,11 @@ public class UI extends JFrame {
                 statusPanel.updateIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
                 statusPanel.updateIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
                 statusPanel.updateIndividualStatus(westGroup, mySystem.getSprinklerStatus(westGroup));
+            }
+            else if (tabbedPane.getSelectedIndex() == 3) {
+                int[] sysWCArray = mySystem.getSysWCData();
+                consumPanel.createBarChartByGroup("SYSTEM", sysWCArray);
+                ((CardLayout)((JPanel)consumPanel.getComponent(1)).getLayout()).show((JPanel)consumPanel.getComponent(1), "SYSTEM");
             }
         }
     };
@@ -135,8 +139,12 @@ public class UI extends JFrame {
         consumPanel.createBarChartByGroup(southGroup, mySystem.getGroupWCData(southGroup));
         consumPanel.createBarChartByGroup(eastGroup, mySystem.getGroupWCData(eastGroup));
         consumPanel.createBarChartByGroup(westGroup, mySystem.getGroupWCData(westGroup));
-        // add action listener
-
+        consumPanel.addGetSysConsumListener(new GetSysConsumptionListener());
+        consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
+        consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
+        consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
+        consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
+        
     }
 
     class SysStatusListener implements ActionListener {
@@ -292,6 +300,37 @@ public class UI extends JFrame {
         }
     }
 
+    class GetSysConsumptionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton sysNameBtn = (JButton)e.getSource();
+            JPanel sysConsumPanel = consumPanel.getCardPanelByName(sysNameBtn.getName());
+            int[] sysWCArray = mySystem.getSysWCData();
+            consumPanel.createBarChartByGroup(sysNameBtn.getName(), sysWCArray);
+            ((CardLayout)sysConsumPanel.getParent().getLayout()).show(sysConsumPanel.getParent(), sysNameBtn.getName());
+        }
+    }
+
+    class GetGroupConsumptionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton groupNameBtn = (JButton)e.getSource();
+            JPanel groupConsumPanel = consumPanel.getCardPanelByName(groupNameBtn.getName());
+            int[] groupWCArray = mySystem.getGroupWCData(groupNameBtn.getName());
+            consumPanel.createBarChartByGroup(groupNameBtn.getName(), groupWCArray);
+            ((CardLayout)groupConsumPanel.getParent().getLayout()).show(groupConsumPanel.getParent(), groupNameBtn.getName());
+
+
+        }
+    }
+
+    class RefreshConsumptionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+
+        }
+    }
 
     private Integer transferScheduleDayFromStringToInt (String day) {
         switch (day) {

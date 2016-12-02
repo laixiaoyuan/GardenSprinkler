@@ -15,11 +15,9 @@ import java.util.Collections;
  */
 class ConsumPanel extends JPanel {
     JPanel groupSelectionPanel;
-    JPanel barChartPanel;
     private JPanel cardPanel;
-    BarChart barChart;
-    Font fontBig = new Font("Georgia", Font.PLAIN, 22);
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
+    Font fontTiny = new Font("Georgia", Font.PLAIN, 14);
 
     public ConsumPanel() {
         super();
@@ -37,17 +35,23 @@ class ConsumPanel extends JPanel {
 
     private JPanel createGroupSelection() {
         JButton systemButton = new JButton("System");
-        systemButton.setFont(fontBig);
+        systemButton.setName("SYSTEM");
+        systemButton.setFont(fontSmall);
         JButton northButton = new JButton("North");
-        northButton.setFont(fontBig);
+        northButton.setName("NORTH");
+        northButton.setFont(fontSmall);
         JButton southButton = new JButton("South");
-        southButton.setFont(fontBig);
+        southButton.setName("SOUTH");
+        southButton.setFont(fontSmall);
         JButton eastButton = new JButton("East");
-        eastButton.setFont(fontBig);
+        eastButton.setName("EAST");
+        eastButton.setFont(fontSmall);
         JButton westButton = new JButton("West");
-        westButton.setFont(fontBig);
-        JButton refreshButton = new JButton("Refresh");
-        refreshButton.setFont(fontBig);
+        westButton.setName("WEST");
+        westButton.setFont(fontSmall);
+        JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setFont(fontSmall);
+
 
         JPanel panel = new JPanel();
         panel.setBorder(new CompoundBorder(new LineBorder(Color.decode("#ebf5ff")), new EmptyBorder(10, 10, 10, 10)));
@@ -56,20 +60,12 @@ class ConsumPanel extends JPanel {
         panel.add(southButton);
         panel.add(eastButton);
         panel.add(westButton);
-        panel.add(refreshButton);
+        panel.add(refreshBtn);
 
         return panel;
     }
-//
-//    private JPanel createBarChartPanel() {
-//
-//
-//
-//        return cardPanel;
-//    }
 
     public void createBarChartByGroup(String name, int[] consumption) {
-        reverseArray(consumption);
         System.out.println("CONSUMPTION 0" + consumption[0]);
         BarChart barChart = new BarChart(getHighWaterVolumeWarning(name));
         for(int i = 0; i < consumption.length; i++) {
@@ -93,63 +89,32 @@ class ConsumPanel extends JPanel {
         }
     }
 
-//    public void saveConsumptionArrayToLocal(String name, int[] consumArray) {
-//        if(consumArray == null) {
-//            System.out.println("saveConsumptionArrayToLocal NULL");
-//        }
-//        Collections.reverse(Arrays.asList(consumArray));
-//        switch (name) {
-//            case "SYSTEM":
-//                System.arraycopy(consumArray, 0, sysConsum, 0, consumArray.length);
-//                System.out.println("Length: " + sysConsum.length);
-//                break;
-//            case "NORTH":
-//                System.arraycopy(consumArray, 0, northConsum, 0, consumArray.length);
-//                break;
-//            case "SOUTH":
-//                System.arraycopy(consumArray, 0, southConsum, 0, consumArray.length);
-//                break;
-//            case "EAST":
-//                System.arraycopy(consumArray, 0, eastConsum, 0, consumArray.length);
-//                break;
-//            case "WEST":
-//                System.arraycopy(consumArray, 0, westConsum, 0, consumArray.length);
-//                break;
-//            default:
-//                System.out.println("Invalid name input");
-//                break;
-//        }
-//    }
-
-    private void reverseArray(int[] array){
-        for(int i = 0; i < array.length / 2; i++) {
-            int temp = array[i];
-            array[i] = array[array.length - i - 1];
-            array[array.length - i - 1] = temp;
-        }
-    }
-
     public JPanel getCardPanelByName(String name) {
         switch (name) {
             case "SYSTEM":
-                return (JPanel)barChartPanel.getComponent(0);
+                return (JPanel)cardPanel.getComponent(0);
             case "NORTH":
-                return (JPanel)barChartPanel.getComponent(1);
+                return (JPanel)cardPanel.getComponent(1);
             case "SOUTH":
-                return (JPanel)barChartPanel.getComponent(2);
+                return (JPanel)cardPanel.getComponent(2);
             case "EAST":
-                return (JPanel)barChartPanel.getComponent(3);
+                return (JPanel)cardPanel.getComponent(3);
             case "WEST":
-                return (JPanel)barChartPanel.getComponent(4);
+                return (JPanel)cardPanel.getComponent(4);
             default:
                 System.out.println("Input name invalid");
                 return null;
         }
     }
 
+    public void addGetSysConsumListener(ActionListener listener) {
+        ((JButton) groupSelectionPanel.getComponent(0)).addActionListener(listener);
+    }
 
-    public void addGetGroupConsumListener(String name, ActionListener listener) {
-        ((JButton)groupSelectionPanel.getComponent(0)).addActionListener(listener);
+    public void addGetGroupConsumListener(ActionListener listener) {
+        for (int i = 1; i < groupSelectionPanel.getComponentCount() - 1; i++) {
+            ((JButton) groupSelectionPanel.getComponent(i)).addActionListener(listener);
+        }
     }
 
     public void addRefreshConsumListener(ActionListener listener) {

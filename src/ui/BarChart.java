@@ -38,12 +38,12 @@ class BarChart extends JPanel {
         max = max + 10;
         // paint bars
 
-        int width = (getWidth() / bars.size()) - 100;
+        int width = (getWidth() / bars.size()) - 10;
         int x = 20;
 
         for (int i = 0; i < bars.size(); i++) {
             int value = bars.get(i);
-            String valueInfo = new Integer(value).toString();
+            String valueInfo = Integer.toString(value);
             int height = (int) ((getHeight() - 50) * ((double)value / max));
             if (value > volumeWarning) {
                 g.setColor(Color.decode("#ff9595"));
