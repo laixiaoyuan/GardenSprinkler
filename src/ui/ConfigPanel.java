@@ -351,9 +351,5 @@ class ConfigPanel extends JPanel {
         }
     }
 
-    public String showOriginTempUpperLimit(int temp) {
-        return "" + temp;
-    }
-
 
 }

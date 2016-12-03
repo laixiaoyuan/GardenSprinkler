@@ -25,7 +25,7 @@ public class UI extends JFrame {
     StatusPanel statusPanel;
     ConfigPanel configPanel;
     ConsumPanel consumPanel;
-    MapPanel mapPanel;
+    ImagePanel imagePanel;
 
     String northGroup = "NORTH";
     String southGroup = "SOUTH";
@@ -33,10 +33,6 @@ public class UI extends JFrame {
     String westGroup = "WEST";
 
     SprinklerSystem mySystem;
-
-    private int statusTabIndex;
-    private boolean statusPanelIsVisible;
-
 
     public UI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -48,14 +44,14 @@ public class UI extends JFrame {
         statusPanel = new StatusPanel();
         configPanel = new ConfigPanel();
         consumPanel = new ConsumPanel();
-        mapPanel = new MapPanel();
+        imagePanel = new ImagePanel();
 
         tabbedPane.setFont(new Font("Georgia", Font.PLAIN, 20));
         tabbedPane.addTab("Overview", overviewPanel);
         tabbedPane.addTab("Status", statusPanel);
         tabbedPane.addTab("Configuration", configPanel);
         tabbedPane.addTab("Water Consumption", consumPanel);
-        tabbedPane.addTab("Map", mapPanel);
+        tabbedPane.addTab("Map", imagePanel);
 
         tabbedPane.addChangeListener(changeListener);
 
@@ -91,18 +87,26 @@ public class UI extends JFrame {
                 consumPanel.validate();
                 consumPanel.repaint();
             }
+            else if (tabbedPane.getSelectedIndex() == 4) {
+                imagePanel.updateSprinklerStatusMap(northGroup, mySystem.getSprinklerStatus(northGroup));
+                imagePanel.updateSprinklerStatusMap(southGroup, mySystem.getSprinklerStatus(southGroup));
+                imagePanel.updateSprinklerStatusMap(eastGroup, mySystem.getSprinklerStatus(eastGroup));
+                imagePanel.updateSprinklerStatusMap(westGroup, mySystem.getSprinklerStatus(westGroup));
+                imagePanel.validate();
+                imagePanel.repaint();
+            }
         }
     };
 
     public void initialize() {
         overviewPanel.showSysStatus(mySystem.getSysStatus());
         overviewPanel.showSysTempValue(mySystem.getSysTemp());
+
         overviewPanel.addSysStatusListener(new SysStatusListener());
         overviewPanel.addSysTempChangeListener(new SysTempListener());
 
         statusPanel.addRefreshListener(new RefreshStatusListener());
         statusPanel.showGroupStatus(mySystem.getGroupStatus());
-
         statusPanel.createIndividualStatus(northGroup, mySystem.getSprinklerStatus(northGroup));
         statusPanel.createIndividualStatus(southGroup, mySystem.getSprinklerStatus(southGroup));
         statusPanel.createIndividualStatus(eastGroup, mySystem.getSprinklerStatus(eastGroup));
@@ -112,7 +116,6 @@ public class UI extends JFrame {
         statusPanel.addGroupStatusListener(southGroup, new GroupStatusListener());
         statusPanel.addGroupStatusListener(eastGroup, new GroupStatusListener());
         statusPanel.addGroupStatusListener(westGroup, new GroupStatusListener());
-
         statusPanel.addIndividualStatusListener(northGroup, new IndividualStatusListener());
         statusPanel.addIndividualStatusListener(southGroup, new IndividualStatusListener());
         statusPanel.addIndividualStatusListener(eastGroup, new IndividualStatusListener());
@@ -122,7 +125,6 @@ public class UI extends JFrame {
         configPanel.createEachScheduleShowPanel(southGroup, mySystem.getSchedule(southGroup));
         configPanel.createEachScheduleShowPanel(eastGroup, mySystem.getSchedule(eastGroup));
         configPanel.createEachScheduleShowPanel(westGroup, mySystem.getSchedule(westGroup));
-        configPanel.showOriginTempUpperLimit(mySystem.getMaxTemp());
 
         configPanel.addAddConfigListener(new AddConfigListener());
         configPanel.addRefreshScheduleListener(northGroup, new RefreshScheduleListener());
@@ -144,11 +146,18 @@ public class UI extends JFrame {
         consumPanel.createBarChartByGroup(southGroup, mySystem.getGroupWCData(southGroup));
         consumPanel.createBarChartByGroup(eastGroup, mySystem.getGroupWCData(eastGroup));
         consumPanel.createBarChartByGroup(westGroup, mySystem.getGroupWCData(westGroup));
+
         consumPanel.addGetSysConsumListener(new GetSysConsumptionListener());
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
         consumPanel.addGetGroupConsumListener(new GetGroupConsumptionListener());
+
+        imagePanel.getSprinklerStatusMap(northGroup, mySystem.getSprinklerStatus(northGroup));
+        imagePanel.getSprinklerStatusMap(southGroup, mySystem.getSprinklerStatus(southGroup));
+        imagePanel.getSprinklerStatusMap(eastGroup, mySystem.getSprinklerStatus(eastGroup));
+        imagePanel.getSprinklerStatusMap(westGroup, mySystem.getSprinklerStatus(westGroup));
+
 
     }
 
@@ -338,16 +347,6 @@ public class UI extends JFrame {
             ((CardLayout)groupConsumPanel.getParent().getLayout()).show(groupConsumPanel.getParent(), groupNameBtn.getName());
             consumPanel.validate();
             consumPanel.repaint();
-        }
-    }
-
-
-
-    class RefreshConsumptionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-
         }
     }
 

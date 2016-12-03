@@ -70,7 +70,7 @@ public class Sprinkler {
 			String groupName = this.getGroupName();
 			try {
 				f.writeData(groupName, new Date(), 
-						(int)(waterVolume * (currTime.getTime()-activateTime.getTime()) / 1000));
+						(int)(waterVolume * (currTime.getTime()-activateTime.getTime())));
 				System.out.println("Data saved to the file.");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -15,7 +15,7 @@ import java.util.TimerTask;
 
 public class SprinklerGroup {
 	
-	boolean isON;
+	public boolean isON;
 	String groupName;
 	List<Sprinkler> sList;
 	List<Schedule> schedList;
@@ -28,7 +28,7 @@ public class SprinklerGroup {
 	private int sprinklerCounter;
 	private int schedCounter;
 	
-	private final static long schedInterval = 1000*60*60*24*7;
+	private final static long schedInterval = 60*60*24*7;
 	
 	public SprinklerGroup(String groupName){
 		isON=false;
@@ -71,6 +71,7 @@ public class SprinklerGroup {
 			setEnableGroup();
 		}else if(!stat && isON){
 			isON = false;
+			System.out.println("SprinklerGroup "+ groupName + " is OFF.");
 			setDisableGroup();
 		}
 	}
@@ -142,13 +143,17 @@ public class SprinklerGroup {
 	}
 	
 	public void addNewSchedule(int day, int startHour, int startMin, int endHour, int endMin){
+//		System.out.println(day+" "+startHour+" "+startMin+" "+endHour+" "+endMin);
 		String id = generateSchedID();
 		Schedule newSchedule = new Schedule(id,day,startHour,startMin,endHour,endMin);
 		schedList.add(newSchedule);
+		System.out.println("New schedule has been added.");
+		addSchedTask(newSchedule);
 	}
 	
 	public void deleteSchedule(String schedID){
 		if(schedTaskMap.containsKey(schedID)){
+			schedTaskMap.get(schedID).cancel();
 			schedTaskMap.remove(schedID);
 		}
 		for(int i=0;i<schedList.size();i++){
@@ -161,6 +166,7 @@ public class SprinklerGroup {
 	
 	public void addTempTask(long duration){
 		TimerTask newTask = new SGroupTask(this,duration);
+		System.out.println("SprinklerGroup "+ groupName + " is started due to temperature limit.");
 		groupTimer.schedule(newTask, 0);
 	}
 	
@@ -168,6 +174,8 @@ public class SprinklerGroup {
 		TimerTask newTask = new SGroupTask(this,sched.getDuration());
 		schedTaskMap.put(sched.getID(), newTask);
 		groupTimer.schedule(newTask, sched.toDate(), schedInterval);
+//		System.out.println("To date result: "+sched.toDate());
+		System.out.println("New task has been added.");
 	}
 	
 	public String generateSchedID(){

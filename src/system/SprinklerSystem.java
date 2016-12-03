@@ -12,15 +12,15 @@ public class SprinklerSystem {
 	
 	private final static int defaultVolume = 10;
 	private final static String[] defaultGroupName = {"NORTH","SOUTH","EAST","WEST"}; 
-	private final static int defaultSchedDay = 3;
-	private final static int defaultStartHour = 10;
-	private final static int defaultStartMin = 0;
-	private final static int defaultEndHour = 10;
-	private final static int defaultEndMin = 5;
+	private final static int defaultSchedDay = 6;
+	private final static int defaultStartHour = 13;
+	private final static int defaultStartMin = 30;
+	private final static int defaultEndHour = 13;
+	private final static int defaultEndMin = 35;
 	private final static int defaultSysTemp = 70;
 	private final static int defaultMaxTemp = 90;
 	private final static int defaultMinTemp = 60;
-	private final static int defaultDuration = 2000;
+	private final static int defaultDuration = 5000;
 	
 	private boolean isOn;
 	private int sysTemp;
@@ -83,7 +83,7 @@ public class SprinklerSystem {
 	// individual sprinkler would be turned off
 	public void setDisableSystem(){
 		for(SprinklerGroup group: sGroupList){
-			group.setDisableGroup();
+			group.setStatus(false);;
 //			group.stopGroupTimer();
 			System.out.println("All system sprinklers have been turned off.");
 		}
@@ -128,14 +128,11 @@ public class SprinklerSystem {
 	public void setSprinklerStatus(String sID, boolean stat){
 		for(Entry<Sprinkler,SprinklerGroup> e : srMap.entrySet()){
 			Sprinkler s = e.getKey();
-			boolean currStat = e.getValue().getStatus();
-			if(s.getID().equals(sID)){
-				if(stat && !currStat){
-					s.setEnable();
-				} else if(!stat && currStat){
-					s.setDisable();
-				}
-			}
+			boolean currGroupStat = e.getValue().getStatus();
+			if(s.getID().equals(sID) && currGroupStat){
+				if(stat)s.setEnable();
+				} else s.setDisable();
+
 		}
 	}
 	
@@ -161,7 +158,9 @@ public class SprinklerSystem {
 	
 	public void setGroupStatus(String groupName,boolean stat){
 		SprinklerGroup group = sGroupMap.get(groupName);
-		group.setStatus(stat);
+		if(isOn){
+			group.setStatus(stat);
+		}		
 	}
 	
 	public Map<String,Boolean> getGroupStatus(){

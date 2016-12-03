@@ -49,9 +49,6 @@ class ConsumPanel extends JPanel {
         JButton westButton = new JButton("West");
         westButton.setName("WEST");
         westButton.setFont(fontSmall);
-        JButton refreshBtn = new JButton("Refresh");
-        refreshBtn.setFont(fontSmall);
-
 
         JPanel panel = new JPanel();
         panel.setBorder(new CompoundBorder(new LineBorder(Color.decode("#ebf5ff")), new EmptyBorder(10, 10, 10, 10)));
@@ -60,7 +57,6 @@ class ConsumPanel extends JPanel {
         panel.add(southButton);
         panel.add(eastButton);
         panel.add(westButton);
-        panel.add(refreshBtn);
 
         return panel;
     }
@@ -115,10 +111,6 @@ class ConsumPanel extends JPanel {
         for (int i = 1; i < groupSelectionPanel.getComponentCount() - 1; i++) {
             ((JButton) groupSelectionPanel.getComponent(i)).addActionListener(listener);
         }
-    }
-
-    public void addRefreshConsumListener(ActionListener listener) {
-        ((JButton)groupSelectionPanel.getComponent(5)).addActionListener(listener);
     }
 
 

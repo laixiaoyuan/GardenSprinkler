@@ -21,23 +21,29 @@ public class SGroupTask extends TimerTask {
 		// TODO Auto-generated method stub
 		
 		Date startTime = new Date();
-		group.setEnableGroup();
+		System.out.println("Start time: " + startTime.getTime());
+		group.isON = true;
 		while(group.getStatus()){
 			try {
+				System.out.println("SprinklerGroup "+ group.getName() + " is now working...");
 				Thread.sleep(duration);
+				System.out.println("SprinklerGroup "+ group.getName() + " finished working.");
+				break;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
 		}
-		group.setDisableGroup();
-		Date currTime = new Date();
+		group.isON=false;
+		System.out.println("SprinklerGroup "+ group.getName() + " is OFF.");
+		Date stopTime = new Date();
+		System.out.println("Stop time: " + stopTime.getTime());
 		DataFile f = new DataFile();
 		try {
-			f.writeData(group.getName(), currTime, 
+			f.writeData(group.getName(), stopTime, 
 					(int)(group.getSprinklerList().size() * group.getWaterVolume()
-							* (currTime.getTime()-startTime.getTime()) / 1000));
+							* (stopTime.getTime()-startTime.getTime())/1000));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
