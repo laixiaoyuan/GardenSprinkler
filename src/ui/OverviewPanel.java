@@ -37,7 +37,7 @@ class OverviewPanel extends JPanel{
         add(controlPanel);
     }
 
-    public void createControlPanel() {
+    private void createControlPanel() {
         JPanel systemStatusPanel = createSysStatus();
         JPanel curTempPanel = createTemp();
 
@@ -45,7 +45,7 @@ class OverviewPanel extends JPanel{
         controlPanel.add(curTempPanel);
     }
 
-    public JPanel createSysStatus() {
+    private JPanel createSysStatus() {
         system = new JLabel("System Status: ");
         system.setFont(fontSmall);
         status = new JLabel();

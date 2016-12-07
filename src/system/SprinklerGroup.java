@@ -28,14 +28,14 @@ public class SprinklerGroup {
 	private int sprinklerCounter;
 	private int schedCounter;
 	
-	private final static long schedInterval = 60*60*24*7;
+	private final static long schedInterval = 1000*60*60*24*7;
 	
 	public SprinklerGroup(String groupName){
 		isON=false;
 		this.groupName = groupName;
 		sList = new ArrayList<Sprinkler>();
 		schedList = new ArrayList<Schedule>();
-		groupTimer = new Timer();
+		groupTimer = new Timer(false);
 //		taskList = new ArrayList<>();
 		schedTaskMap = new HashMap<>();
 		activateTime = null;
@@ -174,7 +174,7 @@ public class SprinklerGroup {
 		TimerTask newTask = new SGroupTask(this,sched.getDuration());
 		schedTaskMap.put(sched.getID(), newTask);
 		groupTimer.schedule(newTask, sched.toDate(), schedInterval);
-//		System.out.println("To date result: "+sched.toDate());
+		System.out.println("To date result: "+sched.toDate());
 		System.out.println("New task has been added.");
 	}
 	

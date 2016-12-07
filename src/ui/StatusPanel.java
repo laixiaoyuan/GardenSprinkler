@@ -60,20 +60,20 @@ class StatusPanel extends JPanel {
         add(notePanel, BorderLayout.SOUTH);
     }
 
-    public void updateStatus() {
-        masterPaneNorth.invalidate();
-        masterPaneNorth.repaint();
-
-        masterPaneEast.invalidate();
-        masterPaneEast.repaint();
-
-        masterPaneSouth.invalidate();
-        masterPaneSouth.repaint();
-
-        masterPaneWest.invalidate();
-        masterPaneWest.repaint();
-
-    }
+//    public void updateStatus() {
+//        masterPaneNorth.invalidate();
+//        masterPaneNorth.repaint();
+//
+//        masterPaneEast.invalidate();
+//        masterPaneEast.repaint();
+//
+//        masterPaneSouth.invalidate();
+//        masterPaneSouth.repaint();
+//
+//        masterPaneWest.invalidate();
+//        masterPaneWest.repaint();
+//
+//    }
     private JPanel createPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

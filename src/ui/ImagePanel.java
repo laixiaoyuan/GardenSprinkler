@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by Lexie on 12/2/16.
  */
-public class ImagePanel extends JPanel{
+class ImagePanel extends JPanel{
 
     Font fontSmall = new Font("Georgia", Font.PLAIN, 18);
     Font fontTiny = new Font("Georgia", Font.PLAIN, 14);
@@ -148,10 +148,6 @@ public class ImagePanel extends JPanel{
 
     }
 
-//    private Map<String, Boolean[]> saveSprinklerStatusMap(String groupName) {
-//        return getMapBasedOnGroupName(groupName);
-//    }
-
     private JPanel getGroupPanel(String groupName) {
         switch (groupName) {
             case "NORTH":
@@ -167,24 +163,4 @@ public class ImagePanel extends JPanel{
         }
     }
 
-//    private JPanel createGroupImageBasedOnStatus(String groupName) {
-//        JPanel groupImagePanel = new JPanel();
-//        Map<String, Boolean[]> groupStatusMap = getMapBasedOnGroupName(groupName);
-//        for (Map.Entry<String, Boolean[]> entry : groupStatusMap.entrySet()) {
-//            JLabel jLabel = new JLabel();
-//            if (entry.getValue()[0]) {  // == true
-//                jLabel.setIcon(imageOn);
-//            }
-//            else {
-//                jLabel.setIcon(imageOff);
-//            }
-//            jLabel.setText(entry.getKey());
-//            jLabel.setHorizontalTextPosition(JLabel.CENTER);
-//            jLabel.setVerticalTextPosition(JLabel.BOTTOM);
-//            groupImagePanel.add(jLabel);
-//            groupImagePanel.validate();
-//            groupImagePanel.repaint();
-//        }
-//        return groupImagePanel;
-//    }
 }

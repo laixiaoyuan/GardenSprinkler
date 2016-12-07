@@ -12,11 +12,11 @@ public class SprinklerSystem {
 	
 	private final static int defaultVolume = 10;
 	private final static String[] defaultGroupName = {"NORTH","SOUTH","EAST","WEST"}; 
-	private final static int defaultSchedDay = 6;
-	private final static int defaultStartHour = 13;
+	private final static int defaultSchedDay = 3;
+	private final static int defaultStartHour = 19;
 	private final static int defaultStartMin = 30;
-	private final static int defaultEndHour = 13;
-	private final static int defaultEndMin = 35;
+	private final static int defaultEndHour = 19;
+	private final static int defaultEndMin = 31;
 	private final static int defaultSysTemp = 70;
 	private final static int defaultMaxTemp = 90;
 	private final static int defaultMinTemp = 60;
@@ -71,7 +71,7 @@ public class SprinklerSystem {
 		else setDisableSystem();
 	}	
 	
-	public void setEnableSystem(){
+	private void setEnableSystem(){
 			this.isOn = true;
 			for(SprinklerGroup group : sGroupList){
 //				group.restartGroupTimer();
@@ -81,7 +81,7 @@ public class SprinklerSystem {
 	
 	// when set disable the system, all sprinkler groups and 
 	// individual sprinkler would be turned off
-	public void setDisableSystem(){
+	private void setDisableSystem(){
 		for(SprinklerGroup group: sGroupList){
 			group.setStatus(false);;
 //			group.stopGroupTimer();
@@ -217,9 +217,6 @@ public class SprinklerSystem {
 	
 //	public static void main(String[] args){
 //		SprinklerSystem sys = new SprinklerSystem();
-//		int[] res = sys.getSysWCData();
-//		for(int i=0;i<res.length;i++){
-//			System.out.print(res[i]+" ");
-//		}
+//		
 //	}
 }

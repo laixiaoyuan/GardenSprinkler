@@ -16,7 +16,6 @@ public class Sprinkler {
 	private Date activateTime;
 	private int waterVolume;
 	
-	private boolean isWaiting = true;
 	
 	public Sprinkler(String sID){
 		this.sID=sID;
@@ -44,6 +43,7 @@ public class Sprinkler {
 				public void run() {
 					// TODO Auto-generated method stub
 					System.out.println("Sprinkler "+ sID + " is working now...");
+					System.out.println(activateTime.getTime());
 					
 					while(isOn){
 						try{				
@@ -60,6 +60,7 @@ public class Sprinkler {
 	}
 	
 	public void setDisable(){
+		System.out.println("Call " + sID + ".setDisable()");
 		if(isOn && activateTime!=null){
 			timer.cancel();
 			timer.purge();

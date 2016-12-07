@@ -171,7 +171,7 @@ class ConfigPanel extends JPanel {
         }
     }
 
-    public String transferScheduleDayFromIntToString(int day) {
+    private String transferScheduleDayFromIntToString(int day) {
         switch(day) {
             case 1:
                 return "Sunday";
@@ -252,7 +252,7 @@ class ConfigPanel extends JPanel {
         return panel;
     }
 
-    public JPanel getPanelBasedOnName(String name) {
+    private JPanel getPanelBasedOnName(String name) {
         switch (name) {
             case "SYSTEMTEMP":
                 return sysTempLimitPanel;

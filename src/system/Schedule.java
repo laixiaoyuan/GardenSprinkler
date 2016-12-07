@@ -3,6 +3,7 @@ package system;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /* The schedule class has scheduled DayOfWeek, start time and end time.
  * By using toDate() function, the schedule would be converted to the
@@ -53,6 +54,7 @@ public class Schedule {
 	
 	public Date toDate(){
 		Calendar c = Calendar.getInstance();
+		c.setTimeZone(TimeZone.getTimeZone("PST"));;
 		int currDay = c.get(Calendar.DAY_OF_WEEK);
 		if(schedDay>=currDay){
 			c.add(Calendar.DATE,schedDay-currDay);
@@ -60,7 +62,7 @@ public class Schedule {
 			c.add(Calendar.DATE, schedDay+7-currDay);
 		}		
 		c.set(Calendar.MINUTE, startMin);
-		c.set(Calendar.HOUR, startHour);
+		c.set(Calendar.HOUR, startHour);	
 		
 		return c.getTime();
 	}

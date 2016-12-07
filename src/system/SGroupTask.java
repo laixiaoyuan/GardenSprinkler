@@ -19,7 +19,7 @@ public class SGroupTask extends TimerTask {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("GroupTimer now running...");
 		Date startTime = new Date();
 		System.out.println("Start time: " + startTime.getTime());
 		group.isON = true;
