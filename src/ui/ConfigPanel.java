@@ -296,7 +296,10 @@ class ConfigPanel extends JPanel {
         return comboBox;
     }
     private JComboBox createMin() {
-        String[] minute = {"00", "10", "20", "30", "40", "50"};
+        String[] minute = new String[60];
+        for (int i = 0; i < 60; i++) {
+            minute[i] = "" + i;
+        }
         JComboBox comboBox = new JComboBox(minute);
         comboBox.setForeground(Color.decode("#3e5266"));
         comboBox.setFont(fontSmall);
